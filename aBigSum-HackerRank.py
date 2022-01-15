@@ -11,7 +11,7 @@ import sys
 #
 # The function is expected to return a LONG_INTEGER.
 # The function accepts LONG_INTEGER_ARRAY ar as parameter.
-#
+# problem description https://www.hackerrank.com/challenges/a-very-big-sum/problem
 
 def aVeryBigSum(ar):
     # Write your code here
