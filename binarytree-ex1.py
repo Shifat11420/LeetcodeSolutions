@@ -50,13 +50,13 @@ class binarytree:
 
     
     def find_min(self):
-        if self.left == None and self.right == None:
+        if self.left == None:
             return self.data
         if self.left:
             return self.left.find_min()         
 
     def find_max(self):
-        if self.left == None and self.right == None:
+        if self.right == None:
             return self.data
         if self.right:
             return self.right.find_max()  
@@ -102,6 +102,36 @@ class binarytree:
         elements.append(self.data)    
 
         return elements
+
+
+    def delete(self, val):
+        if val < self.data:
+            if self.left:
+                self.left.delete(val)
+        elif val > self.data:
+            if val > self.data:
+                self.right.delete(val)
+        else:
+            if self.left == None and self.right == None:                
+                return None  
+            if self.left == None:
+                return self.right
+            if self.right == None:
+                return self.left
+
+            # min_val = self.right.find_min()
+            # self.data = min_val
+            # self.right = self.right.delete(min_val)
+
+            max_val = self.left.find_max()
+            self.data = max_val
+            self.left = self.left.delete(max_val)
+
+
+
+        return self    
+                     
+
 
 
 def build_tree(elements):
@@ -153,4 +183,5 @@ if __name__ == '__main__':
     posttravesed_elements = tree.post_order_traversal()
     print(posttravesed_elements)
 
-    pass
+    tree.delete(12)
+    print(tree.in_order_traversal())
