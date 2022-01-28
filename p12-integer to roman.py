@@ -45,5 +45,40 @@ def intToRoman(num):
     print("Roman is : ", roman)    
         
 
-intToRoman(5)        
+intToRoman(1994)        
 
+
+# another answer
+def intToRoman1(num):
+    dic = {
+                1:'I',
+                4:'IV',
+                5:'V',
+                9:'IX',
+                10:'X',
+                40:'XL',
+                50:'L',
+                90:'XC',
+                100:'C',
+                400:'CD',
+                500:'D',
+                900:'CM',
+                1000:'M'}
+            
+            
+    numbers = list(dic.keys())[::-1]
+    print(numbers)
+
+    ans = []
+    for nd in numbers:
+        div1, mod1 = divmod(num, nd)
+        if div1 > 0:
+            ans.append(div1*dic[nd])
+        num = mod1
+    
+    #return ''.join(ans)
+
+    print(''.join(ans))
+
+
+intToRoman1(1994)  
