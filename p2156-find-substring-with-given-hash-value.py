@@ -61,6 +61,8 @@
 
 ## time limit exceeded with thin example, logically fine I guess, following is a solution from Leetcode
 
+
+# https://youtu.be/bmX2_mal8YQ 
 s = "fbxzaad"
 power = 31
 modulo = 100
