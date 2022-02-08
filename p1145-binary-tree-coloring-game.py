@@ -12,7 +12,7 @@
 
 
 
-####three pass solution
+####three pass solution , DFS
 # Definition for a binary tree node.
 # class TreeNode:
 #     def __init__(self, val=0, left=None, right=None):
@@ -44,7 +44,7 @@ class Solution:
 
 
 
-### onepass solution
+### onepass solution, DFS
 # Definition for a binary tree node.
 # class TreeNode:
 #     def __init__(self, val=0, left=None, right=None):
