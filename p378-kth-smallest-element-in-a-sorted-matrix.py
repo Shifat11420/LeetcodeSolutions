@@ -6,6 +6,9 @@
 
 # You must find a solution with a memory complexity better than O(n2).
 
+
+
+##minheap search
 import heapq
 
 
