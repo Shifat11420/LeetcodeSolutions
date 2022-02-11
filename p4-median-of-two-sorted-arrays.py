@@ -5,8 +5,8 @@
 
 
 ## 2 pointer solution
-nums1 = [1,2]
-nums2 = [3,4]
+nums1 = []
+nums2 = [2,3]
 
 def findMedianSortedArrays(nums1, nums2):
     l1,l2 = len(nums1), len(nums2)
