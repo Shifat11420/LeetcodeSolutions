@@ -1,8 +1,8 @@
 # problem description
 # file:///home/shifat/Pictures/Screenshot%20from%202022-02-17%2014-48-28.png
 
-## two pointers
-
+## two pointers  time complexity O(nlogn), space complexity O(n)
+##fb and premium
 """
 #Definition of interval
 class Interval(object):
