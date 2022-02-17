@@ -2,7 +2,7 @@
 
 # Given a non-empty array nums containing only positive integers, find if the array can be partitioned into two subsets such that the sum of elements in both subsets is equal.
 
-#dynamic programming and memoization
+#dynamic programming and memoization, DFS
 
 def canPartition(nums):
     cache = set()
@@ -11,6 +11,8 @@ def canPartition(nums):
             return False
         if target == 0:
             return True 
+        
+        
         if target in cache:
             return False
         cache.add(target)
