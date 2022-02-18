@@ -10,9 +10,9 @@ from collections import deque
 def singleNumber(nums):
     l = 0
     r = 1
-    temp = deque()
-    visited = {}
-    visited[nums[l]]= 1
+    temp = deque()   #index
+    visited = {}        
+    visited[nums[l]]= 1      #key= array value, value= frequency
     while r < len(nums):
         if nums[l] != nums[r]:
             if nums[r] not in visited:
