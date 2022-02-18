@@ -6,7 +6,7 @@
 
 from collections import deque
 
-## two pointer
+## two pointer, BFS
 def singleNumber(nums):
     l = 0
     r = 1
