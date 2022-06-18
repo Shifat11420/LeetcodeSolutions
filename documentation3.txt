@@ -1,0 +1,150 @@
+
+-----------------------------------------------------------------------
+
+# p146- LRU cache
+#https://leetcode.com/problems/lru-cache/
+# Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.
+
+# Implement the LRUCache class:
+
+# LRUCache(int capacity) Initialize the LRU cache with positive size capacity.
+# int get(int key) Return the value of the key if the key exists, otherwise return -1.
+# void put(int key, int value) Update the value of the key if the key exists. Otherwise, add the key-value pair to the cache. If the number of keys exceeds the capacity from this operation, evict the least recently used key.
+# The functions get and put must each run in O(1) average time complexity.
+
+class Node:
+    def __init__(self, key, val):
+        self.key , self.val = key, val
+        self.prev, self.next = None      #pointers for previous node and next node
+
+
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.cap = capacity
+        self.cache = {}    #hashmap, map key to node
+        
+        # left = LRU, right = most recent
+        self.left, self.right = Node(0,0), Node(0,0)   #dummy pointers for least recently used(LRU), and most recently used 
+        self.left.next, self.right.prev = self.right, self.left  #link the nodes, put a new node in the middle
+
+    # remove node from list (linked list), helper function
+    def remove(self, node):  
+        prev, nxt = node.prev, node.nxt
+        prev.next, nxt.prev = nxt, prev          # removing from the middle of the linked list
+
+    # insert node at right of the node in the linked list, helper function
+    def insert(self, node):        
+        prev, nxt = self.right.prev, self.right
+        prev.next = nxt.prev = node
+        node.prev, node.next = prev, nxt
+
+    def get(self, key: int) -> int:
+        if key in self.cache:
+            #TODO: update the most recent
+            self.remove(self.cache[key])
+            self.insert(self.cache[key])
+            return self.cache[key].val
+        return -1    
+        
+
+    def put(self, key: int, value: int) -> None:
+        if key in self.cache:
+            self.remove(self.cache[key])
+        self.cache[key] = Node(key, value)   #include in the hashmap and pointer to node    
+        self.insert(self.cache[key])         # include in the right of the double linked list
+
+        if len(self.cache)> self.cap:
+            # remove from list and delete the LRU from the hash map
+            lru = self.left.next     #least recently used from the linked list
+            self.remove(lru)             # remove from list
+            del self.cache[lru.key]      # remove from cache
+        
+
+# Your LRUCache object will be instantiated and called as such:
+# obj = LRUCache(capacity)
+# param_1 = obj.get(key)
+# obj.put(key,value)
+
+---------------------------------------------------------------------
+
+#p824- Goat Latin
+# https://leetcode.com/problems/goat-latin/
+# You are given a string sentence that consist of words separated by spaces. Each word consists of lowercase and uppercase letters only.
+
+# We would like to convert the sentence to "Goat Latin" (a made-up language similar to Pig Latin.) The rules of Goat Latin are as follows:
+
+# If a word begins with a vowel ('a', 'e', 'i', 'o', or 'u'), append "ma" to the end of the word.
+# For example, the word "apple" becomes "applema".
+# If a word begins with a consonant (i.e., not a vowel), remove the first letter and append it to the end, then add "ma".
+# For example, the word "goat" becomes "oatgma".
+# Add one letter 'a' to the end of each word per its word index in the sentence, starting with 1.
+# For example, the first word gets "a" added to the end, the second word gets "aa" added to the end, and so on.
+# Return the final sentence representing the conversion from sentence to Goat Latin.
+
+# Example 1:
+
+# Input: sentence = "I speak Goat Latin"
+# Output: "Imaa peaksmaaa oatGmaaaa atinLmaaaaa"
+# Example 2:
+
+# Input: sentence = "The quick brown fox jumped over the lazy dog"
+# Output: "heTmaa uickqmaaa rownbmaaaa oxfmaaaaa umpedjmaaaaaa overmaaaaaaa hetmaaaaaaaa azylmaaaaaaaaa ogdmaaaaaaaaaa"
+
+class Solution:
+    def toGoatLatin(self, sentence: str) -> str:
+        vowels = ["a","e","i","o","u", "A","E","I","O","U"]       
+        wordlist = sentence.split(" ")
+            
+        count = 0
+        new_sentence = ""
+        for word in wordlist:
+            count +=1
+            if list(word)[0] in vowels:
+                word = word+"ma"
+            else:
+                word = word.replace(list(word)[0],"",1) +list(word)[0] + "ma"
+            
+            word = word+ count * "a"
+            
+            new_sentence += str(word)
+            if not count == len(wordlist):
+                new_sentence += " " 
+          
+        return new_sentence
+
+----------------------------------------------------
+
+# 56. Merge Intervals
+# Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
+# Example 1:
+
+# Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
+# Output: [[1,6],[8,10],[15,18]]
+# Explanation: Since intervals [1,3] and [2,6] overlap, merge them into [1,6].
+# Example 2:
+
+# Input: intervals = [[1,4],[4,5]]
+# Output: [[1,5]]
+# Explanation: Intervals [1,4] and [4,5] are considered overlapping.
+
+
+# class Solution:
+#     def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+
+# O(nlogn) , because it's sorting
+def merge(intervals):
+    intervals.sort(key = lambda i : i[0])  #sort by starting point
+
+    output = [intervals[0]]
+
+    for start, end in intervals[1:]:
+        lastend = output[-1][1]
+        if start <= output[-1][1]:
+            output[-1][1] = max(end, lastend)  #for cases like [1,6], [4,5] --> [1,6]
+        else:
+            output.append([start,end])
+
+    return output 
+
+intervals = [[1,3],[2,6],[8,10],[15,18]]
+print(merge(intervals)) 
