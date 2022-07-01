@@ -13,7 +13,8 @@
 
 from operator import truediv
 
-time = O(n), Space = O(n)
+# Time = O(n), iterate once
+# Space = O(n), hashset
 def containsDuplicate(nums):
     hashset = set()
     for n in nums:
