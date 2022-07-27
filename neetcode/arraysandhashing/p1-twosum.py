@@ -25,5 +25,4 @@ def twoSum(nums, target):
         if target-val in prevHash:
             return [prevHash[target-val], i]
         prevHash[val] = i  
-
     return       

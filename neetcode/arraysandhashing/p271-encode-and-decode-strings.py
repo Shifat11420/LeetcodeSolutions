@@ -50,7 +50,6 @@
 #         """Decodes a single string to a list of strings.
 #         """
         
-
 def encode(strs):
     res = ""
     for s in strs:

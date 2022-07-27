@@ -1,0 +1,370 @@
+                                  ARRAYS AND HASHING
+
+
+Problem - 1
+# Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
+# You may assume that each input would have exactly one solution, and you may not use the same element twice.
+# You can return the answer in any order.
+
+# Example 1:
+# Input: nums = [2,7,11,15], target = 9
+# Output: [0,1]
+# Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].
+
+# Example 2:
+# Input: nums = [3,2,4], target = 6
+# Output: [1,2]
+
+
+# Time  = O(n)  --> iterate once 
+# Space =  O(n) --> hashmap
+
+# class Solution:
+#     def twoSum(self, nums: List[int], target: int) -> List[int]:
+
+def twoSum(nums, target):
+    prevHash = {}   # val : index
+
+    for i,val in enumerate(nums):
+        if target-val in prevHash:
+            return [prevHash[target-val], i]
+        prevHash[val] = i  
+    return     
+
+----------------------------------------------------------
+Problem - 36
+# Determine if a 9 x 9 Sudoku board is valid. Only the filled cells need to be validated according to the following rules:
+# Each row must contain the digits 1-9 without repetition.
+# Each column must contain the digits 1-9 without repetition.
+# Each of the nine 3 x 3 sub-boxes of the grid must contain the digits 1-9 without repetition.
+
+# Note:
+# A Sudoku board (partially filled) could be valid but is not necessarily solvable.
+# Only the filled cells need to be validated according to the mentioned rules.
+
+
+# Time complexity O(9^2)
+#hashmap
+import collections
+def isValidSudoku1(board):
+    rows = collections.defaultdict(set)
+    cols = collections.defaultdict(set)
+    squares = collections.defaultdict(set)
+ 
+
+    for i in range(9):
+        for j in range(9):
+            if board[i][j] == ".":
+                continue
+            if(board[i][j] in rows[i] or
+                board[i][j] in cols[j] or
+                board[i][j] in squares[(i//3 , j//3)]):
+                return False
+            rows[i].add(board[i][j])
+            cols[j].add(board[i][j])
+            squares[(i//3 , j//3)].add(board[i][j])
+    return True
+
+boardA =[
+ ["5","3",".",".","7",".",".",".","."]
+,["6",".",".","1","9","5",".",".","."]
+,[".","9","8",".",".",".",".","6","."]
+,["8",".",".",".","6",".",".",".","3"]
+,["4",".",".","8",".","3",".",".","1"]
+,["7",".",".",".","2",".",".",".","6"]
+,[".","6",".",".",".",".","2","8","."]
+,[".",".",".","4","1","9",".",".","5"]
+,[".",".",".",".","8",".",".","7","9"]]    
+
+print(isValidSudoku1(boardA))    
+
+----------------------------------------------------------------
+
+Problem - 49
+# class Solution:
+#     def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
+
+
+from collections import defaultdict
+ 
+## Time Complexity: O(m*n*26)---> O(m*n), m lenth of input list (strs), n is the average of length of the strings, 26 is size of count 
+def groupAnagrams(strs):
+    res = defaultdict(list) ## mapping charCount to a list of anagrams
+
+    for s in strs:
+        count = [0] * 26
+        for c in s:
+            count[ord(c)-ord("a")] += 1       # ord()--> ASCII characters, ord(c)-ord("a") is a number between 0 to 25
+
+        res[tuple(count)].append(s)           # keys can not be list, so make it a tuple
+
+    return res.values()        
+
+strs = ["eat","tea","tan","ate","nat","bat"]
+print(groupAnagrams(strs))
+----------------------------------------------------------
+
+Problem - 128
+# Given an unsorted array of integers nums, return the length of the longest consecutive elements sequence.
+# You must write an algorithm that runs in O(n) time.
+
+# Example 1:
+# Input: nums = [100,4,200,1,3,2]
+# Output: 4
+# Explanation: The longest consecutive elements sequence is [1, 2, 3, 4]. Therefore its length is 4.
+
+# Example 2:
+# Input: nums = [0,3,7,2,5,8,4,6,0,1]
+# Output: 9
+
+# Time complexity : O(n), Space complexity : O(n)
+# class Solution:
+#     def longestConsecutive(self, nums: List[int]) -> int:
+def longestConsecutive(nums):
+    numSet = set(nums)
+    longest = 0
+
+    for n in nums:
+        if (n-1) not in numSet:              # start of a sequence
+            length = 0
+            while (n+length) in numSet:
+                length += 1
+            longest = max(length, longest)
+    return longest   
+
+nums = [0,3,7,2,5,8,4,6,0,1]
+print(longestConsecutive(nums))    
+-------------------------------------------------------------
+
+Problem -217
+#Given an integer array nums, return true if any value appears at least twice in the array, and return false if every element is distinct.
+
+# Example 1:
+# Input: nums = [1,2,3,1]
+# Output: true
+
+# Example 2:
+# Input: nums = [1,2,3,4]
+# Output: false
+
+# class Solution:
+#     def containsDuplicate(self, nums: List[int]) -> bool:
+
+from operator import truediv
+
+# Time = O(n), iterate once
+# Space = O(n), hashset
+def containsDuplicate(nums):
+    hashset = set()
+    for n in nums:
+        if n in hashset:
+            return True
+        hashset.add(n)
+    return False        
+-------------------------------------------------------------
+
+Problem -238
+# Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i].
+# The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.
+# You must write an algorithm that runs in O(n) time and without using the division operation.
+
+# Example 1:
+# Input: nums = [1,2,3,4]
+# Output: [24,12,8,6]
+
+# Example 2:
+# Input: nums = [-1,1,0,-3,3]
+# Output: [0,0,9,0,0]
+
+# Time complexity O(n)
+# class Solution:
+#     def productExceptSelf(self, nums: List[int]) -> List[int]:
+
+def productExceptSelf(nums):
+    res = [1] * len(nums)
+
+    prefix = 1
+    for i in range(len(nums)):
+        res[i] = prefix
+        prefix *= nums[i]
+    # res = [1,1,2,6]    
+
+    postfix = 1
+    for i in range(len(nums)-1, -1, -1):
+        res[i] *= postfix
+        postfix *= nums[i]
+    # res = [24,12,8,6]    
+
+    return res
+----------------------------------------------------------------------
+
+Problem - 242
+# Given two strings s and t, return true if t is an anagram of s, and false otherwise.
+
+# An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+
+# Example 1:
+# Input: s = "anagram", t = "nagaram"
+# Output: true
+
+# Example 2:
+# Input: s = "rat", t = "car"
+# Output: false
+
+from typing import Counter
+class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        # hashmap solution, 
+        # time O(s+t) -> iterate through both strings,
+        # space O(s+t) -> two hashmaps
+        if len(s) != len(t):
+            return False
+
+        countS, countT = {}, {}
+
+        for i in range(len(s)):
+            countS[s[i]] = 1 + countS.get(s[i], 0)
+            countT[t[i]] = 1 + countT.get(t[i], 0)
+
+        for c in countS:
+            if countS[c] != countT.get(c, 0):
+                return False
+
+        return True        
+
+        # builtin counter solution, 
+        # time O(s+t) -> iterate through both strings,
+        # space O(s+t) -> two hashmaps
+
+        return Counter(s) == Counter(t)
+
+        # builtin sort solution, 
+        # time O(s+t) -> iterate through both strings,
+        # space O(1) 
+
+        return sorted(s) == sorted(t)
+-----------------------------------------------------------------------
+
+Problem - 271
+# Design an algorithm to encode a list of strings to a string. The encoded string is then sent over the network and is decoded back to the original list of strings.
+
+# Machine 1 (sender) has the function:
+# string encode(vector<string> strs) {
+#   // ... your code
+#   return encoded_string;
+# }
+# Machine 2 (receiver) has the function:
+# vector<string> decode(string s) {
+#   //... your code
+#   return strs;
+# }
+# So Machine 1 does:
+
+# string encoded_string = encode(strs);
+# and Machine 2 does:
+
+# vector<string> strs2 = decode(encoded_string);
+# strs2 in Machine 2 should be the same as strs in Machine 1.
+
+# Implement the encode and decode methods.
+
+# You are not allowed to solve the problem using any serialize methods (such as eval).
+
+# Example 1:
+# Input: dummy_input = ["Hello","World"]
+# Output: ["Hello","World"]
+# Explanation:
+# Machine 1:
+# Codec encoder = new Codec();
+# String msg = encoder.encode(strs);
+# Machine 1 ---msg---> Machine 2
+
+# Machine 2:
+# Codec decoder = new Codec();
+# String[] strs = decoder.decode(msg);
+# Example 2:
+
+# Input: dummy_input = [""]
+# Output: [""]
+
+
+# Time complexity : encode O(n), decode O(n)
+# class Codec:
+#     def encode(self, strs: List[str]) -> str:
+#         """Encodes a list of strings to a single string.
+#         """
+
+#     def decode(self, s: str) -> List[str]:
+#         """Decodes a single string to a list of strings.
+#         """
+        
+def encode(strs):
+    res = ""
+    for s in strs:
+        res += str(len(s))+"#"+s
+    return res
+
+def decode(s):
+    res, i = [], 0
+
+    while i < len(s):
+        j = i
+        while s[j] != "#":
+            j += 1 
+        length = int(s[i : j])
+        res.append(s[j+1 : j+1+length])
+        i = j +1 +length 
+    return res         
+
+
+strs = ["Hello", "World"]
+
+print(encode(strs))    
+print(decode(encode(strs)))
+# Your Codec object will be instantiated and called as such:
+# codec = Codec()
+# codec.decode(codec.encode(strs))
+-----------------------------------------------------------------------------------
+
+Problem -347
+# Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.
+# Example 1:
+# Input: nums = [1,1,1,2,2,3], k = 2
+# Output: [1,2]
+
+# Example 2:
+# Input: nums = [1], k = 1
+# Output: [1]
+
+
+#Complexity: 
+# time = O(n)    actually O(n)+ O(n) for n length of input array,   len(freq) + len (freq[i])
+# Space = O(n)      hashmap
+
+# class Solution:
+#     def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+
+def topKFrequent(nums, k):
+    count = {}
+    freq = [[] for i in range(len(nums)+1)]  
+
+    for n in nums:
+        count[n] = 1 + count.get(n,0)              ## count[number] = occurance, {1:3, 2:2, 3:1, 4:2}
+
+    for n, c in count.items():
+        freq[c].append(n)                          ## freq[occurance] = list of numbers,   [1:[3],2:[2,4],3:[1]], sorted
+    print(freq)    
+
+    res = []
+    for i in range(len(freq)-1, 0, -1):           ## descending loop
+        for n in freq[i]:
+            res.append(n)
+
+            if len(res) == k:
+                return res
+
+
+nums = [1,1,1,2,2,3,4,4]
+k = 2 
+print(topKFrequent(nums, k))
+-----------------------------------------------------------------------------------
