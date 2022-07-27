@@ -15,13 +15,15 @@
 # Time  = O(n)  --> iterate once 
 # Space =  O(n) --> hashmap
 
-class Solution:
-    def twoSum(self, nums: List[int], target: int) -> List[int]:
-        prevHash = {}   # val : index
+# class Solution:
+#     def twoSum(self, nums: List[int], target: int) -> List[int]:
 
-        for i,val in enumerate(nums):
-            if target-val in prevHash:
-                return [prevHash[target-val], i]
-            prevHash[val] = i  
+def twoSum(nums, target):
+    prevHash = {}   # val : index
 
-        return       
+    for i,val in enumerate(nums):
+        if target-val in prevHash:
+            return [prevHash[target-val], i]
+        prevHash[val] = i  
+
+    return       
