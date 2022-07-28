@@ -21,6 +21,8 @@
 # Output: [[0,0,0]]
 # Explanation: The only possible triplet sums up to 0.
 
+
+# Complexity: time O(nlogn + n^2) ---> O(n^2), space O(1) to O(n)
 from typing import List
 
 class Solution:
