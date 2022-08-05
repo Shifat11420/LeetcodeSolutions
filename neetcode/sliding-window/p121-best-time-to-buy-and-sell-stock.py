@@ -3,8 +3,6 @@
 # You want to maximize your profit by choosing a single day to buy one stock and choosing a different day in the future to sell that stock.
 # Return the maximum profit you can achieve from this transaction. If you cannot achieve any profit, return 0.
 
- 
-
 # Example 1:
 # Input: prices = [7,1,5,3,6,4]
 # Output: 5
@@ -12,12 +10,12 @@
 # Note that buying on day 2 and selling on day 1 is not allowed because you must buy before you sell.
 
 from typing import List
-## two pointer, o(n) time, o(1) space complexity
+## two pointer
+# Complexity: time o(n), space O(1)
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
         maxprofit = 0           
-        l = 0
-        r = 1
+        l, r = 0, 1  #left = buy, right = sell
         
         while r<len(prices):
             if prices[r]>prices[l]:

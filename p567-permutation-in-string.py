@@ -15,46 +15,34 @@
 # Input: s1 = "ab", s2 = "eidboaoo"
 # Output: false
 
+# Complexity: time O(n), space O(1)
 from collections import Counter
 
-
 def checkInclusion(s1, s2):
-    # s1l = list(s1)
-    # s2l = list(s2)
-    # res = []
-        
-    # for i in range(len(s1l)):
-    #     if s1l[i] in s2l:       
-    #         for j in range(len(s2l)):
-    #             if s1l[i] == s2l[j]:
-    #                 res.append(j)                
-    #     else:
-    #         return False
-            
-    # res = sorted(res)
-    # print("res : ",res) 
-    # if len(res) == 1:
-    #     return True
-    # else:
-    #     for k in range(len(s1l)-1):
-    #         if res[k+1]-res[k] != 1:
-    #             return False           
-    #     return True
     if len(s1)>len(s2):
         return False
+
+    count1, count2 = {}, {}
+    for c in range(len(s1)):
+        count1[s1[c]] = 1 + count1.get(s1[c],0)    
+        count2[s2[c]] = 1 + count2.get(s2[c],0)
+
+    if count1 == count2:
+        return True
+
+    l = 0
     window = len(s1)
-    s1_c = Counter(s1)
-    print(s1_c)
-    
-    for i in range(len(s2)-window+1):
-        s2_c = Counter(s2[i:i+window])
-        if s2_c == s1_c:
+    for r in range(window, len(s2)):
+        count2[s2[l]] -= 1
+        if count2[s2[l]] == 0:
+            count2.pop(s2[l])
+        count2[s2[r]] = 1 + count2.get(s2[r],0)
+        if count1 == count2:
             return True
-        
+        l += 1     
     return False
-        
-s1="hello"
-s2="ooolleoooleh"  
+s1 = "ab"
+s2 = "eidbaooo"
 
 print(checkInclusion(s1, s2))    
     
