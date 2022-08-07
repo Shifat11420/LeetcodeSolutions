@@ -27,7 +27,7 @@
 # minStack.top();    // return 0
 # minStack.getMin(); // return -2
 
-
+# Complexity: O(1) each operation
 class MinStack:
     def __init__(self):
         self.stack = []
