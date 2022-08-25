@@ -1,0 +1,414 @@
+                                        BINARY SEARCH
+
+
+
+Problem-704
+# Given an array of integers nums which is sorted in ascending order, and an integer target, write a function to search target in nums. If target exists, then return its index. Otherwise, return -1.
+
+# You must write an algorithm with O(log n) runtime complexity.
+
+# Example 1:
+# Input: nums = [-1,0,3,5,9,12], target = 9
+# Output: 4
+# Explanation: 9 exists in nums and its index is 4
+
+# Example 2:
+# Input: nums = [-1,0,3,5,9,12], target = 2
+# Output: -1
+# Explanation: 2 does not exist in nums so return -1
+
+# Complexity: time O(logn) -- regular binary search method, since it is a sorted array
+# two pointers
+
+from typing import List
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        l, r = 0, len(nums)-1
+
+        while l <=r :
+            m = l + (r-l)//2               #not using (l+r)//2 to avoid overflow problem
+            if nums[m] < target:
+                l = m+1
+            elif nums[m] > target:
+                r = m-1
+            else:
+                return m
+        return -1                
+
+nums = [-1,0,3,5,9,12]
+target = 9
+new = Solution
+print(new().search(nums, target))        
+--------------------------------------------------------------------------------------------------
+Problem-74
+# Write an efficient algorithm that searches for a value target in an m x n integer matrix matrix. This matrix has the following properties:
+
+# Integers in each row are sorted from left to right.
+# The first integer of each row is greater than the last integer of the previous row.
+ 
+# Example 1:
+# Input: matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 3
+# Output: true
+
+# Example 2:
+# Input: matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 13
+# Output: false 
+
+
+#Complexity: time O(logm + logn)
+from typing import List
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+        ROWS, COLS = len(matrix), len(matrix[0])
+
+        top, bot = 0, ROWS-1
+        while top <= bot:
+            row = (top+bot)//2
+            if target > matrix[row][-1]:
+                top = row+1
+            elif target < matrix[row][0]:
+                bot = row-1
+            else:
+                break
+
+        if not (top<=bot):
+            return False
+
+        row = (top+bot)//2
+        l, r = 0, COLS-1
+        while l<=r:
+            m = (l+r)//2
+            if target > matrix[row][m]:
+                l = m+1
+            elif target < matrix[row][m]:
+                r = m-1
+            else:
+                return True
+        return False   
+
+matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]]
+target = 13
+new = Solution
+print(new().searchMatrix(matrix, target))                     
+
+
+
+----------------------------------------------------------------------------------------------------
+
+Problem-875
+# Koko loves to eat bananas. There are n piles of bananas, the ith pile has piles[i] bananas. The guards have gone and will come back in h hours.
+# Koko can decide her bananas-per-hour eating speed of k. Each hour, she chooses some pile of bananas and eats k bananas from that pile. If the pile has less than k bananas, she eats all of them instead and will not eat any more bananas during this hour.
+# Koko likes to eat slowly but still wants to finish eating all the bananas before the guards return.
+# Return the minimum integer k such that she can eat all the bananas within h hours.
+
+# Example 1:
+# Input: piles = [3,6,7,11], h = 8
+# Output: 4
+
+# Example 2:
+# Input: piles = [30,11,23,4,20], h = 5
+# Output: 30
+
+# Example 3:
+# Input: piles = [30,11,23,4,20], h = 6
+# Output: 23
+
+
+#Complexity: time O(log(max(piles))*p) , p = len(piles)
+import math
+from typing import List
+class Solution:
+    def minEatingSpeed(self, piles: List[int], h: int) -> int:
+        l, r = 1, max(piles)
+        res = r
+
+        while l<=r:
+            k = (l+r)//2
+            hours = 0
+            for p in piles:
+                hours += math.ceil(p/k)
+
+            if hours <= h:
+                res = min(res, k)    
+                r = k-1
+            else:
+                l = k+1
+        return res            
+
+piles = [30,11,23,4,20]
+h = 5
+new = Solution
+print(new().minEatingSpeed(piles,h))
+
+--------------------------------------------------------------------------------------------
+
+Problem-33
+# here is an integer array nums sorted in ascending order (with distinct values).
+# Prior to being passed to your function, nums is possibly rotated at an unknown pivot index k (1 <= k < nums.length) such that the resulting array is [nums[k], nums[k+1], ..., nums[n-1], nums[0], nums[1], ..., nums[k-1]] (0-indexed). For example, [0,1,2,4,5,6,7] might be rotated at pivot index 3 and become [4,5,6,7,0,1,2].
+# Given the array nums after the possible rotation and an integer target, return the index of target if it is in nums, or -1 if it is not in nums.
+# You must write an algorithm with O(log n) runtime complexity.
+
+# Example 1:
+# Input: nums = [4,5,6,7,0,1,2], target = 0
+# Output: 4
+
+# Example 2:
+# Input: nums = [4,5,6,7,0,1,2], target = 3
+# Output: -1
+
+# Example 3:
+# Input: nums = [1], target = 0
+# Output: -1
+
+# Complexity: time O(log n)
+
+from typing import List
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        l, r = 0, len(nums)-1
+
+        while l <= r:
+            mid = (l+r)//2
+            if target == nums[mid]:
+                return mid
+
+            # left soreted array
+            if nums[l] <= nums[mid]:
+                if target < nums[l] or target > nums[mid]:
+                    l = mid +1    
+                else:
+                    r = mid-1
+
+            # right sorted array
+            else:
+                if target < nums[mid] or target > nums[r]:
+                    r = mid - 1
+                else:
+                    l = mid + 1
+
+        return -1                    
+
+nums = [4,5,6,7,0,1,2]
+target = 0  
+new =Solution      
+print(new().search(nums, target))
+
+--------------------------------------------------------------------------------------------------
+
+Problem-153
+# Suppose an array of length n sorted in ascending order is rotated between 1 and n times. For example, the array nums = [0,1,2,4,5,6,7] might become:
+# [4,5,6,7,0,1,2] if it was rotated 4 times.
+# [0,1,2,4,5,6,7] if it was rotated 7 times.
+# Notice that rotating an array [a[0], a[1], a[2], ..., a[n-1]] 1 time results in the array [a[n-1], a[0], a[1], a[2], ..., a[n-2]].
+# Given the sorted rotated array nums of unique elements, return the minimum element of this array.
+# You must write an algorithm that runs in O(log n) time.
+
+#  Example 1:
+# Input: nums = [3,4,5,1,2]
+# Output: 1
+# Explanation: The original array was [1,2,3,4,5] rotated 3 times.
+
+# Example 2:
+# Input: nums = [4,5,6,7,0,1,2]
+# Output: 0
+# Explanation: The original array was [0,1,2,4,5,6,7] and it was rotated 4 times.
+
+# Example 3:
+# Input: nums = [11,13,15,17]
+# Output: 11
+# Explanation: The original array was [11,13,15,17] and it was rotated 4 times. 
+
+
+# Complexity: time O(log n) 
+from typing import List
+class Solution:
+    def findMin(self, nums: List[int]) -> int:
+        l, r  = 0, len(nums)-1
+        res = nums[0]
+
+        while l<=r:
+            if nums[l]<=nums[r]:
+                res = min(res, nums[l])
+                break
+
+            mid = (l+r)//2
+            res = min(res, nums[mid])
+            if nums[l]<=nums[mid]:
+                l = mid+1
+            else:
+                r = mid-1
+        return res            
+
+nums = [4,5,6,7,0,1,2]
+new = Solution
+print(new().findMin(nums))        
+-----------------------------------------------------------------------------------------------------
+
+Problem-981
+# Design a time-based key-value data structure that can store multiple values for the same key at different time stamps and retrieve the key's value at a certain timestamp.
+
+# Implement the TimeMap class:
+
+# TimeMap() Initializes the object of the data structure.
+# void set(String key, String value, int timestamp) Stores the key key with the value value at the given time timestamp.
+# String get(String key, int timestamp) Returns a value such that set was called previously, with timestamp_prev <= timestamp. If there are multiple such values, it returns the value associated with the largest timestamp_prev. If there are no values, it returns "".
+ 
+
+# Example 1:
+
+# Input
+# ["TimeMap", "set", "get", "get", "set", "get", "get"]
+# [[], ["foo", "bar", 1], ["foo", 1], ["foo", 3], ["foo", "bar2", 4], ["foo", 4], ["foo", 5]]
+# Output
+# [null, null, "bar", "bar", null, "bar2", "bar2"]
+
+# Explanation
+# TimeMap timeMap = new TimeMap();
+# timeMap.set("foo", "bar", 1);  // store the key "foo" and value "bar" along with timestamp = 1.
+# timeMap.get("foo", 1);         // return "bar"
+# timeMap.get("foo", 3);         // return "bar", since there is no value corresponding to foo at timestamp 3 and timestamp 2, then the only value is at timestamp 1 is "bar".
+# timeMap.set("foo", "bar2", 4); // store the key "foo" and value "bar2" along with timestamp = 4.
+# timeMap.get("foo", 4);         // return "bar2"
+# timeMap.get("foo", 5);         // return "bar2"
+ 
+
+# Complexity: set O(1), get O(log n) 
+class TimeMap:
+
+    def __init__(self):
+        self.store = {} # key : list of [value, timestamp]
+        
+    
+    def set(self, key: str, value: str, timestamp: int) -> None:
+        if key not in self.store:
+            self.store[key] = []
+        self.store[key].append([value, timestamp])
+
+
+    def get(self, key: str, timestamp: int) -> str:
+        res = ""
+        values = self.store.get(key,[])
+
+        # binary search
+        l, r = 0, len(values)-1
+
+        while l<=r:
+            m = (l+r)//2
+
+            if values[m][1] <= timestamp:
+                res = values[m][0]
+                l = m+1
+            else:
+                r = m-1
+        return res            
+
+
+# Your TimeMap object will be instantiated and called as such:
+# obj = TimeMap()
+# obj.set(key,value,timestamp)
+# param_2 = obj.get(key,timestamp) 
+
+timeMap = TimeMap
+timeMap().set("foo", "bar", 1)      # store the key "foo" and value "bar" along with timestamp = 1.
+print(timeMap().get("foo", 1))         # return "bar"
+print(timeMap().get("foo", 3))        # return "bar", since there is no value corresponding to foo at timestamp 3 and timestamp 2, then the only value is at timestamp 1 is "bar".
+# timeMap.set("foo", "bar2", 4); // store the key "foo" and value "bar2" along with timestamp = 4.
+# timeMap.get("foo", 4);         // return "bar2"
+# timeMap.get("foo", 5);         // return "bar2"
+ 
+--------------------------------------------------------------------------------------------
+
+Problem -04
+# https://leetcode.com/problems/median-of-two-sorted-arrays/
+# Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.
+
+# The overall run time complexity should be O(log (m+n)).
+# Example 1:
+# Input: nums1 = [1,3], nums2 = [2]
+# Output: 2.00000
+# Explanation: merged array = [1,2,3] and median is 2.
+
+# Example 2:
+# Input: nums1 = [1,2], nums2 = [3,4]
+# Output: 2.50000
+# Explanation: merged array = [1,2,3,4] and median is (2 + 3) / 2 = 2.5.
+
+## binary search
+nums1 = [1,2]
+nums2 = [3,4]
+
+def findMedianSortedArrays(nums1, nums2):
+    l1,l2 = len(nums1), len(nums2)
+    middle = (l1+l2)/2
+    
+    if middle == 0.5:
+        if l1>l2:
+            return float(l1[0])
+        else:
+            return float(l2[0])    
+        
+    x=y=0
+    prev=curr=0
+        
+    if middle % 1 == 0:
+        loops = middle+1
+    else:
+        loops = middle+0.5
+        
+    for _ in range(int(loops)):
+        prev= curr
+        
+        if x == l1:
+            curr = nums2[y]
+            y += 1
+        elif y == l2:
+            curr = nums1[x]
+            x += 1
+        elif nums1[x] > nums2[y]:
+            curr = nums2[y]
+            y +=1
+        else:
+            curr = nums1[x] 
+            x += 1
+    if middle % 1 == 0:
+        return (prev+curr)/2
+    else:
+        return float(curr)                         
+
+print(findMedianSortedArrays(nums1, nums2))    
+
+#NEETCODE
+from typing import List
+class Solution:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+        A, B = nums1, nums2
+        total = len(nums1)+len(nums2)
+        half = total//2
+
+        if len(A)>len(B):
+            A, B = B, A
+
+        l, r = 0 , len(A)-1
+        while True:
+            i = (l+r)//2     # for A
+            j = half-i-2     # for B, index, so -2 for 0's in A and B
+
+            Aleft = A[i] if i>=0 else float("-infinity")
+            Aright = A[i+1] if i+1 < len(A) else float("infinity") 
+            Bleft = B[j] if j>=0 else float("-infinity")
+            Bright = B[j+1] if j+1 < len(B) else float("infinity")
+
+            if Aleft<=Bright and Bleft<=Aright:
+                #odd
+                if total % 2:
+                   return min(Aright, Bright)
+                else:
+                    return (max(Aleft,Bleft)+min(Aright,Bright))/2
+            elif Aleft>Bright:
+                r= i-1
+            else:
+                l = i+1
+
+new = Solution
+print(new().findMedianSortedArrays(nums1,nums2))
+
