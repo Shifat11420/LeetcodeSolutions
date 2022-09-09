@@ -22,6 +22,8 @@
 # trie.startsWith("app"); // return True
 # trie.insert("app");
 # trie.search("app");     // return True
+
+# Complexity: time O(1)  #O(26)
 class TrieNode():
     def __init__(self) -> None:
         self.children = {}
@@ -33,7 +35,7 @@ class Trie:
         self.root = TrieNode()        
 
     def insert(self, word: str) -> None:
-        cur = self.root
+        cur = self.root  #start at the root
 
         for c in word:
             if c not in cur.children:
@@ -42,7 +44,7 @@ class Trie:
         cur.endOfWord = True               
 
     def search(self, word: str) -> bool:
-        cur = self.root
+        cur = self.root    #start at the root
  
         for c in word:
             if c not in cur.children:
@@ -50,10 +52,8 @@ class Trie:
             cur = cur.children[c]
         return cur.endOfWord
 
-
-
     def startsWith(self, prefix: str) -> bool:
-        cur = self.root
+        cur = self.root    #start at the root
 
         for c in prefix:
             if c not in cur.children:
