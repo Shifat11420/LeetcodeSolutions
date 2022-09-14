@@ -61,7 +61,7 @@ def leastInterval(tasks, n):
        
 
 tasks = ["A","A","A","B","B","B"]
-n = 2
+n = 0
 
 print(leastInterval(tasks, n))
 #leastInterval(tasks, n)
