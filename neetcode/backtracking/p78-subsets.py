@@ -21,7 +21,7 @@ class Solution:
         
         def dfs(i):                    # i = index
             if i >= len(nums):
-                res.append(subset.copy())
+                res.append(subset.copy())          # copy because we will change/add to it later
                 return
         
             # decision to include nums[i]
