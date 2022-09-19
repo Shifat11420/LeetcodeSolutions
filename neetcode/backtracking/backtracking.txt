@@ -1,0 +1,390 @@
+                                   BACKTRACKING
+
+
+Problem - 78
+# Given an integer array nums of unique elements, return all possible subsets (the power set).
+# The solution set must not contain duplicate subsets. Return the solution in any order.
+
+# Example 1:
+# Input: nums = [1,2,3]
+# Output: [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
+
+# Example 2:
+# Input: nums = [0]
+# Output: [[],[0]]
+ 
+
+# DFS 
+# Complexity : time O(n * 2^n)
+from typing import List
+
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        subset = []
+        res = []
+        
+        def dfs(i):                    # i = index
+            if i >= len(nums):
+                res.append(subset.copy())          # copy because we will change/add to it later
+                return
+        
+            # decision to include nums[i]
+            subset.append(nums[i])
+            dfs(i+1)
+            
+            # decision NOT to include nums[i]
+            subset.pop()
+            dfs(i+1)
+            
+        dfs(0)
+        return res      
+---------------------------------------------------------------------------------------
+
+Problem - 39
+# Given an array of distinct integers candidates and a target integer target, return a list of all unique combinations of candidates where the chosen numbers sum to target. You may return the combinations in any order.
+# The same number may be chosen from candidates an unlimited number of times. Two combinations are unique if the frequency of at least one of the chosen numbers is different.
+# The test cases are generated such that the number of unique combinations that sum up to target is less than 150 combinations for the given input.
+
+# Example 1:
+# Input: candidates = [2,3,6,7], target = 7
+# Output: [[2,2,3],[7]]
+# Explanation:
+# 2 and 3 are candidates, and 2 + 2 + 3 = 7. Note that 2 can be used multiple times.
+# 7 is a candidate, and 7 = 7.
+# These are the only two combinations.
+
+# Example 2:
+# Input: candidates = [2,3,5], target = 8
+# Output: [[2,2,2,2],[2,3,3],[3,5]]
+
+# Example 3:
+# Input: candidates = [2], target = 1
+# Output: []
+
+# two decisions : add a candidate and NOT add the candidate. [2] <-- * --> [], then add 3 to [2], [2,3] <-- [2] --> [2]
+# Complexity: O(2**t), each recursion step, we can make 2 decisions and t= target (height of the decision tree, that is, at most the target value)
+
+class Solution:
+    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+        res = []
+        
+        def dfs(i, cur, total):    #index, current combination, total of current combination
+            if target==total:
+                res.append(cur.copy())      #copy because we are going to add to it later
+                return
+            if i >= len(candidates) or total > target:
+                return
+            
+            # decision to add candidate
+            cur.append(candidates[i])
+            dfs(i, cur, total+candidates[i])
+            
+            # decision NOT to add candidate
+            cur.pop()
+            dfs(i+1, cur, total)
+            
+        dfs(0, [], 0)
+        return res
+------------------------------------------------------------------------------------------------
+
+Problem - 46
+# Given an array nums of distinct integers, return all the possible permutations. You can return the answer in any order.
+
+# Example 1:
+# Input: nums = [1,2,3]
+# Output: [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+
+# Example 2:
+# Input: nums = [0,1]
+# Output: [[0,1],[1,0]]
+
+# Example 3:
+# Input: nums = [1]
+# Output: [[1]]
+
+# choices top down the tree: pop first element
+# choices bottom up the tree:  add the element at the end
+
+# Complexity: 
+    # Time: between O(n!) and O(n * n!)
+    # Space: O(n * n!) it's the space taken by res
+# Comment: If using mutable collection, time complexity is exactly the space complexity for output: O(n * n!).
+# The list instance is created "only" at the base case. Then the result of base case is always reused and mutated with O(1) time complexity to add single value.
+from typing import List
+
+
+class Solution:
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        result = []
+        
+        if len(nums)==1:
+            return [nums[:]]     #copy of nums
+        
+        for i in range(len(nums)):
+            n = nums.pop(0)
+            perms = self.permute(nums)       #recursion
+            
+            #bottom up
+            for perm in perms:
+                perm.append(n)
+            result.extend(perms)          # add the permutation
+            nums.append(n)              # add to the end
+            
+        return result   
+--------------------------------------------------------------------------------------
+
+Problem - 90
+# Given an integer array nums that may contain duplicates, return all possible subsets (the power set).
+# The solution set must not contain duplicate subsets. Return the solution in any order.
+
+# Example 1:
+# Input: nums = [1,2,2]
+# Output: [[],[1],[1,2],[1,2,2],[2],[2,2]]
+
+# Example 2:
+# Input: nums = [0]
+# Output: [[],[0]]
+
+
+# idea: difference with subset-I problem --> if a value occurs multiple times, when we choose to skip a duplicate, we should skip all the duplicates, just add once (do it after sorting)
+# Complexity: time O(n*2^n+nlog) ~ O(n*2^n) ---worst case, nlogn for sorting
+# each value 2 choices, n values in the input --> 2^n choices of subsets, how long each subset> at most n, so O(length of the subset * number of subsets)=O(n*2^n)
+
+from typing import List
+
+class Solution:
+    def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:
+        res = []
+        nums.sort()      #you want to sort it because it helps skipping the duplicates
+        
+        def backtrack(i, subset):   # i = index, subset = current subset
+            # base case
+            if i == len(nums):
+                res.append(subset[::])      #copy of subset
+                return
+
+            # decision to include nums[i]
+            subset.append(nums[i])
+            backtrack(i+1, subset)
+
+            #decision NOT to include nums[i]
+            subset.pop()
+            while i+1<len(nums) and nums[i]==nums[i+1]:
+                i += 1
+            backtrack(i+1, subset)
+        
+        backtrack(0, [])
+        return res     
+----------------------------------------------------------------------------------------------------
+
+Problem - 40
+# Given a collection of candidate numbers (candidates) and a target number (target), find all unique combinations in candidates where the candidate numbers sum to target.
+# Each number in candidates may only be used once in the combination.
+# Note: The solution set must not contain duplicate combinations.
+
+# Example 1:
+# Input: candidates = [10,1,2,7,6,1,5], target = 8
+# Output: 
+# [
+# [1,1,6],
+# [1,2,5],
+# [1,7],
+# [2,6]
+# ]
+
+# Example 2:
+# Input: candidates = [2,5,2,1,2], target = 5
+# Output: 
+# [
+# [1,2,2],
+# [5]
+# ]
+
+# Idea: we sort the array and ignore duplicates in the iteration, not down the tree
+# Complexity: O(2^n), n= size of candidates
+
+class Solution:
+    def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
+        candidates.sort()
+        res = []
+        
+        def backtrack(cur, pos, target):   #cur = current combination, pos = starting position, target = current target after decreasing everytime
+            # base case
+            if target == 0:
+                res.append(cur.copy())
+                return
+            if target <= 0:
+                return
+                
+            prev = -1    
+            for i in range(pos, len(candidates)):
+                if prev == candidates[i]:
+                    continue
+                cur.append(candidates[i])
+                backtrack(cur, i+1, target-candidates[i])
+                cur.pop()
+                
+                prev = candidates[i]
+                
+        backtrack([], 0, target) 
+        return res
+-----------------------------------------------------------------------------------
+
+Problem - 79
+# Given an m x n grid of characters board and a string word, return true if word exists in the grid.
+# The word can be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once.
+
+# Example 1:
+# Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCCED"
+# Output: true
+
+# Example 2:
+# Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "SEE"
+# Output: true
+
+# Example 3:
+# Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCB"
+# Output: false
+
+
+# Complexity: (without added code)
+#             O(n * m * complexity of dfs) = O(n*m*4^t), 
+#             n and m = dimensions of board, 
+#             complexity of dfs = len(word)= t and called 4 times, so 4^t   
+#             (with added code probably also adds n * m)
+
+class Solution:
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        ROW, COL = len(board), len(board[0])
+        
+        ######### without this part of code, solution is not efficient  ##########
+        if len(word) > ROW * COL:    
+            return False                
+
+        path = set()
+        for r in range(ROW):
+            for c in range(COL):
+                path.add(board[r][c])
+        if len(path) < len(set(word)):          
+            return False                        
+        #################################################################
+
+        def dfs(r, c, i):   # i = index of current position in the word
+            if i == len(word):
+                return True
+            if (r<0 or c<0 or r==ROW or c==COL or (r,c) in path or word[i]!=board[r][c]):
+                return False
+            
+            path.add((r,c))
+            res = (dfs(r+1, c, i+1) or
+                  dfs(r-1, c, i+1) or
+                  dfs(r, c+1, i+1) or
+                  dfs(r, c-1, i+1))
+            path.remove((r,c))          # since we are returning from this function, we are no longer visiting this path    
+            return res
+        
+        for r in range(ROW):
+            for c in range(COL):
+                if dfs(r,c,0): return True
+        return False        
+-------------------------------------------------------------------------------------------            
+        
+Problem - 131
+# Given a string s, partition s such that every substring of the partition is a palindrome. Return all possible palindrome partitioning of s.
+# A palindrome string is a string that reads the same backward as forward.
+
+# Example 1:
+# Input: s = "aab"
+# Output: [["a","a","b"],["aa","b"]]
+
+# Example 2:
+# Input: s = "a"
+# Output: [["a"]]
+
+# bruteforce, backtracking
+# check every single partition and check if they are palindrome,add them and recursively continue DFS (add rest of the charaters in the tree)
+# if they are not partition, leave that choice, this way they will not make palindromes
+#  Complexity: O(2^n) at least
+
+from typing import List
+
+
+class Solution:
+    def partition(self, s: str) -> List[List[str]]:
+        res = []
+        part = []   #list of partitions
+        
+        def dfs(i):
+            if i >= len(s):
+                res.append(part.copy())
+                return
+            
+            for j in range(i, len(s)):         # in the same level of the tree
+                if self.isPalindrome(s, i, j):
+                    part.append(s[i:j+1])
+                    dfs(j+1)                   # this basically shows in the next step of dfs which index it's starting at
+                    part.pop()
+                    
+        dfs(0)
+        return res
+    
+    def isPalindrome(self, s, l, r):
+        while l<r:
+            if s[l]!=s[r]:
+                return False
+            l, r = l+1, r-1        
+        return True     
+------------------------------------------------------------------------------------------
+
+Problem - 17
+# Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could represent. Return the answer in any order.
+# A mapping of digits to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters.
+
+# Example 1:
+# Input: digits = "23"
+# Output: ["ad","ae","af","bd","be","bf","cd","ce","cf"]
+
+# Example 2:
+# Input: digits = ""
+# Output: []
+
+# Example 3:
+# Input: digits = "2"
+# Output: ["a","b","c"]
+
+# idea: loop inside backtrack
+# number of outputs we can have is 4^n, n = length of the input string, 4^n because 4.4.4.4... for each of the place we can have 3 or 4 choices
+# length of each output string is length of the input string = n
+# Complexity: time = O(n *4^n)
+
+class Solution:
+    def letterCombinations(self, digits: str) -> List[str]:
+        res = []
+        digitTochar = { "2": "abc",
+                        "3": "def",
+                        "4": "ghi",
+                        "5": "jkl",
+                        "6": "mno",
+                        "7": "pqrs",
+                        "8": "tuv",
+                        "9": "wxyz"
+                        }
+        
+        # writting inside the function so we need to pass in this parameters everytime we call the function 
+        def backtrack(i, curStr):    # i = index of digit we are currently at, curStr = current string  
+            # base case 
+            if len(curStr) == len(digits):      # all the string would be the size of input
+                res.append(curStr)
+                return
+            
+            for c in digitTochar[digits[i]]:       #for "23", c starts with "a","b","c" 
+                backtrack(i+1, curStr+c)           # i+1 next level, level 1: "a",.... , level 2: "ad", "ae", "af"
+                
+        if digits:
+            backtrack(0, "")     #since we return [] for empty input
+        return res    
+--------------------------------------------------------------------------------------------------
+
+Problem - 51
+
+
