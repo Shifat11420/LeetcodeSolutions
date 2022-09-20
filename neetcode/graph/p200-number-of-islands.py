@@ -20,6 +20,7 @@
 # Output: 3
 
 # BFS, iterative
+import collections
 from typing import List
 
 class Solution:
