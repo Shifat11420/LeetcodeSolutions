@@ -17,6 +17,7 @@
 # DFS, backtracking
 # Complexity: time O(v+e)^2--> O(e^2), space O(e)
 
+from typing import List
 class Solution:
     def findItinerary(self, tickets: List[List[str]]) -> List[str]:
         adj = {src:[] for src, dst in tickets}
