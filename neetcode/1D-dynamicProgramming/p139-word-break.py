@@ -19,6 +19,7 @@
 # s = 'leetcode', w = 'leet'
 # dp[8]= dp[0+len(w)]=dp[4]=True
 # Complexity: O(n*m*n), n = len(s) (go through every single position), m = len(wordDict), n for matching
+from typing import List
 class Solution:
     def wordBreak(self, s: str, wordDict: List[str]) -> bool:
         dp = [False] * (len(s)+1)   # 1 for base case
