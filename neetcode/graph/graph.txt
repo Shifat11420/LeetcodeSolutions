@@ -544,67 +544,53 @@ class Solution:
                 return [n1,n2]
 ----------------------------------------------------------------------------------
 
-Problem - 200
-# Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands.
-# An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+Problem - 323
+#Given n nodes labeled from 0 to n - 1 and a list of undirected edges (each edge is a pair of nodes), write a function to find the number of connected components in an undirected graph.
 
-# Example 1:
-# Input: grid = [
-#   ["1","1","1","1","0"],
-#   ["1","1","0","1","0"],
-#   ["1","1","0","0","0"],
-#   ["0","0","0","0","0"]
-# ]
-# Output: 1
+# https://www.youtube.com/watch?v=8f1XPm4WOUc
+# Union-find algorithm
+# start with separate connected component for each node, as connect, decrease the number
+# parent array and rank array- size of entire connected component, increase as connect
+# if the root parent are same, they are connected
 
-# Example 2:
-# Input: grid = [
-#   ["1","1","0","0","0"],
-#   ["1","1","0","0","0"],
-#   ["0","0","1","0","0"],
-#   ["0","0","0","1","1"]
-# ]
-# Output: 3
 
-# BFS, iterative
-import collections
+
+#Complexity: O(e+v) --check
 from typing import List
 
 class Solution:
-    def numIslands(self, grid: List[List[str]]) -> int:
-        if not grid :
-            return
-        
-        rows, cols = len(grid), len(grid[0])
-        visit = set()
-        islands = 0        
-        
-        def bfs(r, c):
-            q = collections.deque()      
-            q.append((r,c))
-            visit.add((r, c))
-            
-            while q:
-                row, col = q.popleft() 
-                directions = [[1,0], [-1,0], [0,1], [0,-1]]
-            
-                for dr, dc in directions:
-                    r, c = row+dr, col+dc
-                    if (r in range(rows) 
-                        and c in range(cols)
-                        and grid[r][c] == "1" 
-                        and (r, c) not in visit):
-                        q.append((r,c))
-                        visit.add((r, c))
-        
-        for r in range(rows):
-            for c in range(cols):
-                if grid[r][c] == "1" and (r, c) not in visit:    
-                    bfs(r,c)
-                    islands += 1
-        return islands        
-    
-# for DFS, iterative, just use q.pop() instead of popleft(), that way it would pop most recent element we added instead of the firstelement we added.
+    def countComponents(self, n:int, edges: List[List[int]]) -> int:
+        par = [i for i in range(n)]         #parent array
+        rank = [1] * n
+
+        def find(n1):
+            res = n1    
+            while res != par[res]:
+                par[res] = par[par[res]]    #path compression
+                res = par[res]
+            return res
+
+        def union(n1,n2):
+            p1, p2 = find(n1), find(n2)        
+            if p1==p2:
+                return 0
+            if rank[p1]>rank[p2]:
+                par[p2] =p1
+                rank[p1] += rank[p2]
+            else:
+                par[p1] =p2
+                rank[p2] += rank[p1]
+            return 1
+
+        res = n
+        for n1, n2 in edges:
+            res -= union(n1, n2)        
+        return res
+
+n= 5
+edges = [[0,1], [1,2], [3,4]]
+new = Solution
+print(new().countComponents(n, edges))
 -----------------------------------------------------------------------------------------------------------
 
 Problem - 261
@@ -717,7 +703,3 @@ wordList = ["hot","dot","dog","lot","log","cog"]
 new = Solution
 print(new().ladderLength(beginWord, endWord, wordList))
 ------------------------------------------------------------------------------------
-        
-
-
-
