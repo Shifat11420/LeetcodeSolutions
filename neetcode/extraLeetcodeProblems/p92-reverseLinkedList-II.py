@@ -24,20 +24,19 @@ class Solution:
         prevLeft = None
         rightNext = None
 
-
         while cur:
-            if count<left:
+            if count < left:
                 prevLeft = cur
             if count == left:
                 listLeft = cur
             if count == right:
                 listRight = cur
                 rightNext = cur.next
-            if count>= left and count<=right:
+            if count >= left and count <= right:
                 tmp = cur.next
                 cur.next = prev
                 prev = cur
-                cur = tmp            
+                cur = tmp
             else:
                 prev = cur
                 cur = cur.next
@@ -45,8 +44,8 @@ class Solution:
 
         listLeft.next = rightNext
 
-        if prevLeft==None:
+        if prevLeft == None:
             return listRight
-        else:    
+        else:
             prevLeft.next = listRight
-        return head    
+        return head
