@@ -1,0 +1,481 @@
+			1D Dynamic Programming- Extra Problems
+
+
+PROBLEMS-120   Triangle
+
+# Given a triangle array, return the minimum path sum from top to bottom.
+# For each step, you may move to an adjacent number of the row below. More formally, if you are on index i on the current row, you may move to either index i or index i + 1 on the next row.
+
+# Example 1:
+# Input: triangle = [[2],[3,4],[6,5,7],[4,1,8,3]]
+# Output: 11
+# Explanation: The triangle looks like:
+#    2
+#   3 4
+#  6 5 7
+# 4 1 8 3
+# The minimum path sum from top to bottom is 2 + 3 + 5 + 1 = 11 (underlined above).
+
+# Example 2:
+# Input: triangle = [[-10]]
+# Output: -10
+
+# Time: O(nm), Space: O(n)
+class Solution:
+    def minimumTotal(self, triangle: List[List[int]]) -> int:
+        dp = [0]*(len(triangle)+1)
+        for row in triangle[::-1]:
+            for i,n in enumerate(row):
+                dp[i] = n+min(dp[i],dp[i+1])
+        return dp[0]
+-----------------------------------------------------------
+
+PROBLEMS-740  Delete and Earn
+
+# You are given an integer array nums. You want to maximize the number of points you get by performing the following operation any number of times:
+# Pick any nums[i] and delete it to earn nums[i] points. Afterwards, you must delete every element equal to nums[i] - 1 and every element equal to nums[i] + 1.
+# Return the maximum number of points you can earn by applying the above operation some number of times.
+
+# Example 1:
+# Input: nums = [3,4,2]
+# Output: 6
+# Explanation: You can perform the following operations:
+# - Delete 4 to earn 4 points. Consequently, 3 is also deleted. nums = [2].
+# - Delete 2 to earn 2 points. nums = [].
+# You earn a total of 6 points.
+
+# Example 2:
+# Input: nums = [2,2,3,3,3,4]
+# Output: 9
+# Explanation: You can perform the following operations:
+# - Delete a 3 to earn 3 points. All 2's and 4's are also deleted. nums = [3,3].
+# - Delete a 3 again to earn 3 points. nums = [3].
+# - Delete a 3 once more to earn 3 points. nums = [].
+# You earn a total of 9 points.
+ 
+# Time: O(nlogn) , Space O(n)
+class Solution:
+    def deleteAndEarn(self, nums: List[int]) -> int:
+        count = {}
+        for n in nums:
+            count[n] = 1+count.get(n,0)
+
+        arr = sorted(count.keys())
+        earn1, earn2 = 0, 0
+        for i,n in enumerate(arr):
+            curEarn = n*count[n]
+            if i>0 and arr[i-1]==n-1:
+                tmp = max(curEarn+earn1, earn2)
+                earn1 = earn2
+                earn2 = tmp
+            else:
+                tmp = curEarn+earn2
+                earn1 = earn2
+                earn2 = tmp
+        return earn2    
+-----------------------------------------------------------
+
+PROBLEMS-256    Paint House
+
+# There is a row of n houses, where each house can be painted one of three colors: red, blue, or green. The cost of painting each house with a certain color is different. You have to paint all the houses such that no two adjacent houses have the same color.
+# The cost of painting each house with a certain color is represented by an n x 3 cost matrix costs.
+# For example, costs[0][0] is the cost of painting house 0 with the color red; costs[1][2] is the cost of painting house 1 with color green, and so on...
+# Return the minimum cost to paint all houses.
+
+# Example 1:
+# Input: costs = [[17,2,17],[16,16,5],[14,3,19]]
+# Output: 10
+# Explanation: Paint house 0 into blue, paint house 1 into green, paint house 2 into blue.
+# Minimum cost: 2 + 5 + 3 = 10.
+
+# Example 2:
+# Input: costs = [[7,6,2]]
+# Output: 2
+
+# Time: O(n), Space : O(1)
+class Solution:
+    def minCost(self, costs: List[List[int]]) -> int:
+        dp = [0,0,0]
+        for i in range(len(costs)):
+            dp0 = costs[i][0]+min(dp[1], dp[2])
+            dp1 = costs[i][1]+min(dp[0], dp[2])
+            dp2 = costs[i][2]+min(dp[0], dp[1])
+            dp = [dp0, dp1, dp2]
+        return min(dp)   
+-----------------------------------------------------------
+
+PROBLEMS-377 Combination Sum IV
+
+# Given an array of distinct integers nums and a target integer target, return the number of possible combinations that add up to target.
+# The test cases are generated so that the answer can fit in a 32-bit integer.
+ 
+# Example 1:
+# Input: nums = [1,2,3], target = 4
+# Output: 7
+# Explanation:
+# The possible combination ways are:
+# (1, 1, 1, 1)
+# (1, 1, 2)
+# (1, 2, 1)
+# (1, 3)
+# (2, 1, 1)
+# (2, 2)
+# (3, 1)
+# Note that different sequences are counted as different combinations.
+
+# Example 2:
+# Input: nums = [9], target = 3
+# Output: 0
+
+# Time : O(mn), Space: O(m)
+class Solution:
+    def combinationSum4(self, nums: List[int], target: int) -> int:
+        cache = {0:1}
+
+        for total in range(1,target+1):
+            cache[total] = 0
+            for n in nums:
+                cache[total]+=cache.get(total-n, 0)
+        return cache[target]
+
+class Solution:
+    def combinationSum4(self, nums: List[int], target: int) -> int:
+        cache = {}
+        def dfs(total):
+            if total in cache:
+                return cache[total]
+            if total==0:
+                return 1
+            if total<0:
+                return 0
+            
+            cache[total] = 0
+            for n in nums:
+                cache[total]+=dfs(total-n)            
+            return cache[total]
+
+        return dfs(target) 
+-----------------------------------------------------------
+
+PROBLEMS-279  Perfect Squares
+
+# Given an integer n, return the least number of perfect square numbers that sum to n.
+# A perfect square is an integer that is the square of an integer; in other words, it is the product of some integer with itself. For example, 1, 4, 9, and 16 are perfect squares while 3 and 11 are not.
+
+# Example 1:
+# Input: n = 12
+# Output: 3
+# Explanation: 12 = 4 + 4 + 4.
+
+# Example 2:
+# Input: n = 13
+# Output: 2
+# Explanation: 13 = 4 + 9.
+
+# Time: O(n*sqrt(n)), space: O(n)
+class Solution:
+    def numSquares(self, n: int) -> int:
+        dp = [n]*(n+1)
+        dp[0] = 0
+
+        for target in range(1,n+1):
+            for s in range(1, target+1):
+                square = s*s
+                if target-square<0:
+                    break
+                dp[target] = min(dp[target], 1+dp[target-square])  #+1 because we used the square already
+
+        return dp[n]  
+-----------------------------------------------------------
+
+PROBLEMS-2369 Chack if There is a Valid Partition For The Array
+
+# You are given a 0-indexed integer array nums. You have to partition the array into one or more contiguous subarrays.
+# We call a partition of the array valid if each of the obtained subarrays satisfies one of the following conditions:
+# The subarray consists of exactly 2, equal elements. For example, the subarray [2,2] is good.
+# The subarray consists of exactly 3, equal elements. For example, the subarray [4,4,4] is good.
+# The subarray consists of exactly 3 consecutive increasing elements, that is, the difference between adjacent elements is 1. For example, the subarray [3,4,5] is good, but the subarray [1,3,5] is not.
+# Return true if the array has at least one valid partition. Otherwise, return false.
+
+# Example 1:
+# Input: nums = [4,4,4,5,6]
+# Output: true
+# Explanation: The array can be partitioned into the subarrays [4,4] and [4,5,6].
+# This partition is valid, so we return true.
+
+# Example 2:
+# Input: nums = [1,1,1,2]
+# Output: false
+# Explanation: There is no valid partition for this array.
+
+class Solution:
+    def validPartition(self, nums: List[int]) -> bool:
+        def isvalid(arr):
+            if len(arr)==2:
+                if arr[0]==arr[1]:
+                    return True
+            if len(arr)==3:
+                if arr[0]==arr[1]==arr[2] or arr[2]==arr[1]+1==arr[0]+2:
+                    return True
+            return False  
+
+        # Memoization
+        # Time: O(n), Space O(n)
+        dp = {}
+        def dfs(i):
+            if i==len(nums):
+                return True
+            if i in dp:
+                return dp[i]
+            res = False        
+            if i+1<=len(nums) and isvalid(nums[i:i+2]):
+                res = dfs(i+2)
+            if i+2<=len(nums) and isvalid(nums[i:i+3]):
+                res = res or dfs(i+3)   
+            dp[i]= res  
+            return dp[i]
+
+        return dfs(0)    
+
+        # Time: O(n), Space O(1)
+        # dp
+        two = isvalid(nums[-2:])
+        if len(nums)==2:
+            return two
+        three = isvalid(nums[-3:])
+
+        dp = [three, two, False]
+
+        for i in range(len(nums)-4, -1, -1):
+            cur = isvalid(nums[i:i+2]) and dp[1]
+            cur = cur or (isvalid(nums[i:i+3]) and dp[2])
+            dp = [cur, dp[0], dp[1]]
+        return dp[0]              
+-----------------------------------------------------------
+
+PROBLEMS-1856 Maximum Subarray Min-Product
+
+# The min-product of an array is equal to the minimum value in the array multiplied by the array's sum.
+# For example, the array [3,2,5] (minimum value is 2) has a min-product of 2 * (3+2+5) = 2 * 10 = 20.
+# Given an array of integers nums, return the maximum min-product of any non-empty subarray of nums. Since the answer may be large, return it modulo 109 + 7.
+# Note that the min-product should be maximized before performing the modulo operation. Testcases are generated such that the maximum min-product without modulo will fit in a 64-bit signed integer.
+# A subarray is a contiguous part of an array.
+
+# Example 1:
+# Input: nums = [1,2,3,2]
+# Output: 14
+# Explanation: The maximum min-product is achieved with the subarray [2,3,2] (minimum value is 2).
+# 2 * (2+3+2) = 2 * 7 = 14.
+
+# Example 2:
+# Input: nums = [2,3,3,1,2]
+# Output: 18
+# Explanation: The maximum min-product is achieved with the subarray [3,3] (minimum value is 3).
+# 3 * (3+3) = 3 * 6 = 18.
+
+# Example 3:
+# Input: nums = [3,1,5,6,4,2]
+# Output: 60
+# Explanation: The maximum min-product is achieved with the subarray [5,6,4] (minimum value is 4).
+# 4 * (5+6+4) = 4 * 15 = 60.
+ 
+
+# Monotonic increasing stack
+# consider each value to be minimum of the subarray and make the subarray as large as possibly can
+# compute sum in O(1) with prefix -precompute sum for every element
+# stack in increasing order - pop (greater)values when array becomes decreasing and computing minproduct for that value
+#after popping we can add next value (which is not decreasing value anymore) and the start for this val will go to the left and is the start of the value we just popped.
+# stack (start, val) --start is the position from where this val is minimum to the end of the stack
+# end of stack is end of input array
+
+# time : O(n), Space: O(n)
+
+class Solution:
+    def maxSumMinProduct(self, nums: List[int]) -> int:
+        res = 0
+        stack = []
+        prefix = [0]
+
+        for n in nums:
+            prefix.append(prefix[-1]+n)
+
+        for i,n in enumerate(nums):
+            newStart = i
+            while stack and stack[-1][1]>n:
+                start, val = stack.pop()
+                total = prefix[i]-prefix[start]
+                res = max(res, val*total)
+                newStart = start
+            stack.append((newStart, n))
+
+        for start, val in stack:
+            total = prefix[len(nums)]-prefix[start]
+            res = max(res, val*total)
+        return res%(10**9+7)    
+-----------------------------------------------------------
+
+PROBLEM-983 Minimum cost for tickets
+
+# You have planned some train traveling one year in advance. The days of the year in which you will travel are given as an integer array days. Each day is an integer from 1 to 365.
+# Train tickets are sold in three different ways:
+# a 1-day pass is sold for costs[0] dollars,
+# a 7-day pass is sold for costs[1] dollars, and
+# a 30-day pass is sold for costs[2] dollars.
+# The passes allow that many days of consecutive travel.
+# For example, if we get a 7-day pass on day 2, then we can travel for 7 days: 2, 3, 4, 5, 6, 7, and 8.
+# Return the minimum number of dollars you need to travel every day in the given list of days.
+
+# Example 1:
+# Input: days = [1,4,6,7,8,20], costs = [2,7,15]
+# Output: 11
+# Explanation: For example, here is one way to buy passes that lets you travel your travel plan:
+# On day 1, you bought a 1-day pass for costs[0] = $2, which covered day 1.
+# On day 3, you bought a 7-day pass for costs[1] = $7, which covered days 3, 4, ..., 9.
+# On day 20, you bought a 1-day pass for costs[0] = $2, which covered day 20.
+# In total, you spent $11 and covered all the days of your travel.
+
+# Example 2:
+# Input: days = [1,2,3,4,5,6,7,8,9,10,30,31], costs = [2,7,15]
+# Output: 17
+# Explanation: For example, here is one way to buy passes that lets you travel your travel plan:
+# On day 1, you bought a 30-day pass for costs[2] = $15 which covered days 1, 2, ..., 30.
+# On day 31, you bought a 1-day pass for costs[0] = $2 which covered day 31.
+# In total, you spent $17 and covered all the days of your travel.
+ 
+# time: O(38.n) ~ O((1+7+30)*n) within a single dfs you have to do 1+7+30 operations
+class Solution:
+    def mincostTickets(self, days: List[int], costs: List[int]) -> int:
+        dp = {}
+        def dfs(i):
+            if i ==len(days):
+                return 0
+            if i in dp:
+                return dp[i]
+
+            dp[i] = float('inf')
+            for d, c in zip([1,7,30], costs):
+                j=i
+                while j<len(days) and days[j]<days[i]+d:
+                    j+=1
+                dp[i] = min(dp[i], c+dfs(j))
+            return dp[i]
+        return dfs(0)      
+
+    def mincostTickets(self, days: List[int], costs: List[int]) -> int:
+        dp = {}
+        for i in range(len(days)-1,-1,-1):
+
+            dp[i] = float('inf')
+            for d, c in zip([1,7,30], costs):
+                j=i
+                while j<len(days) and days[j]<days[i]+d:
+                    j+=1
+                dp[i] = min(dp[i], c+dp.get(j,0))
+        return dp[0]
+--------------------------------------------------------------------------------
+
+PROBLEM-343 Integer break
+# Time: O(n^2),  n subproblems and solve each is O(n) operations performed once
+# Space : O(n), recursive call stack or cache
+ 
+class Solution:
+    # caching/memoization
+    def integerBreak(self, n: int) -> int:
+        dp = {1:1}
+
+        def dfs(num):
+            if num in dp:
+                return dp[num]
+            dp[num] = 0 if num==n else num  # makes sure, the original problem (say, n=4) has to be broken down but not the subproblems (1,3 or 2,2, not for 3 or 2 because 3 (prod 3)->1,2(prod 2) or 1,1,1(prod 1))
+
+            for i in range(1,num):
+                val = dfs(i)*dfs(num-i)
+                dp[num] = max(dp[num], val)
+            return dp[num]
+
+        return dfs(n)        
+
+    # DP 
+    def integerBreak(self, n: int) -> int:
+        dp = {1:1}    
+       
+        for num in range(2,n+1):
+            dp[num] = 0 if num==n else num
+            for i in range(1, num):
+                val = dp[i]*dp[num-i]
+                dp[num] = max(dp[num], val)
+        return dp[n]        
+--------------------------------------------------------------------------------
+
+PROBLEM-673 Numberof Longest increasing subsequence
+
+# Given an integer array nums, return the number of longest increasing subsequences.
+# Notice that the sequence has to be strictly increasing.
+
+# Example 1:
+# Input: nums = [1,3,5,4,7]
+# Output: 2
+# Explanation: The two longest increasing subsequences are [1, 3, 4, 7] and [1, 3, 5, 7].
+
+# Example 2:
+# Input: nums = [2,2,2,2,2]
+# Output: 5
+# Explanation: The length of the longest increasing subsequence is 1, and there are 5 increasing subsequences of length 1, so output 5.
+
+
+class Solution:
+    def findNumberOfLIS(self, nums: List[int]) -> int:
+        # 1. O(n^2) Recursive solution with Caching
+
+        dp = {}  # key = index, value = [length of LIS, count]
+        lenLIS, res = 0, 0  # length of LIS, count of LIS
+
+        def dfs(i):
+            if i in dp:
+                return dp[i]
+
+            maxLen, maxCnt = 1, 1  # length and count of LIS
+            for j in range(i + 1, len(nums)):
+                if nums[j] > nums[i]:  # make sure increasing order
+                    length, count = dfs(j)
+                    if length + 1 > maxLen:
+                        maxLen, maxCnt = length + 1, count
+                    elif length + 1 == maxLen:
+                        maxCnt += count
+            nonlocal lenLIS, res
+            if maxLen > lenLIS:
+                lenLIS, res = maxLen, maxCnt
+            elif maxLen == lenLIS:
+                res += maxCnt
+            dp[i] = [maxLen, maxCnt]
+            return dp[i]
+
+        for i in range(len(nums)):
+            dfs(i)
+        return res
+
+        # 2. O(n^2) Dynamic Programming
+
+        dp = {}  # key = index, value = [length of LIS, count]
+        lenLIS, res = 0, 0  # length of LIS, count of LIS
+
+        # i = start of subseq
+        for i in range(len(nums) - 1, -1, -1):
+            maxLen, maxCnt = 1, 1  # len, cnt of LIS start from i
+
+            for j in range(i + 1, len(nums)):
+                if nums[j] > nums[i]:
+                    length, count = dp[j]  # len, cnt of LIS start from j
+                    if length + 1 > maxLen:
+                        maxLen, maxCnt = length + 1, count
+                    elif length + 1 == maxLen:
+                        maxCnt += count
+            if maxLen > lenLIS:
+                lenLIS, res = maxLen, maxCnt
+            elif maxLen == lenLIS:
+                res += maxCnt
+            dp[i] = [maxLen, maxCnt]
+
+        return res
+                    
+        
