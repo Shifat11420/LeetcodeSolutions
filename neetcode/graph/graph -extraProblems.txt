@@ -1,0 +1,125 @@
+            			Graph-- Extra Problems
+
+
+
+
+PROBLEM- 463 Island Perimeter
+
+# You are given row x col grid representing a map where grid[i][j] = 1 represents land and grid[i][j] = 0 represents water.
+# Grid cells are connected horizontally/vertically (not diagonally). The grid is completely surrounded by water, and there is exactly one island (i.e., one or more connected land cells).
+# The island doesn't have "lakes", meaning the water inside isn't connected to the water around the island. One cell is a square with side length 1. The grid is rectangular, width and height don't exceed 100. Determine the perimeter of the island.
+
+# Example 1:
+# Input: grid = [[0,1,0,0],[1,1,1,0],[0,1,0,0],[1,1,0,0]]
+# Output: 16
+# Explanation: The perimeter is the 16 yellow stripes in the image above.
+
+# Example 2:
+# Input: grid = [[1]]
+# Output: 4
+
+# Example 3:
+# Input: grid = [[1,0]]
+# Output: 4
+
+# Time: O(mn), Space: O(mn)
+# Linear function, linear complexity, only visit each cell once and size of grid is mn
+class Solution:
+    def islandPerimeter(self, grid: List[List[int]]) -> int:
+        ROW, COL = len(grid), len(grid[0])
+        visit = set()
+
+        def dfs(r,c,visit, count):
+            if (r<0 or r==ROW or c<0 or c==COL or grid[r][c]==0):
+                return 1
+            if (r,c) in visit:
+                return 0 
+                           
+            visit.add((r,c))
+            count = 0
+            count += dfs(r+1,c, visit, count)
+            count += dfs(r-1,c, visit, count)
+            count += dfs(r,c+1, visit, count)
+            count += dfs(r,c-1, visit, count)
+            return count
+
+        for r in range(ROW):
+            for c in range(COL):
+                if grid[r][c]==1:
+                    return dfs(r,c,visit,count)
+
+             
+
+------------------------------------------------------------------------
+PROBLEM- 953 Verifying an Alien Dictionary
+# In an alien language, surprisingly, they also use English lowercase letters, but possibly in a different order. The order of the alphabet is some permutation of lowercase letters.
+# Given a sequence of words written in the alien language, and the order of the alphabet, return true if and only if the given words are sorted lexicographically in this alien language.
+
+# Example 1:
+# Input: words = ["hello","leetcode"], order = "hlabcdefgijkmnopqrstuvwxyz"
+# Output: true
+# Explanation: As 'h' comes before 'l' in this language, then the sequence is sorted.
+
+# Example 2:
+# Input: words = ["word","world","row"], order = "worldabcefghijkmnpqstuvxyz"
+# Output: false
+# Explanation: As 'd' comes after 'l' in this language, then words[0] > words[1], hence the sequence is unsorted.
+
+# Example 3:
+# Input: words = ["apple","app"], order = "abcdefghijklmnopqrstuvwxyz"
+# Output: false
+# Explanation: The first three characters "app" match, and the second string is shorter (in size.) According to lexicographical rules "apple" > "app", because 'l' > '∅', where '∅' is defined as the blank character which is less than any other character (More info).
+ 
+#Time : O(mnr), m=len(words), n =avg length of elements in words, r=len(order) for index access
+# Space: O(1)  
+class Solution:
+    def isAlienSorted(self, words: List[str], order: str) -> bool:   
+        for i in range(len(words)-1):
+            w1, w2 = words[i], words[i+1]
+                
+            for j in range(len(w1)):        
+                if j==len(w2):
+                    return False
+                if w1[j]!=w2[j]:
+                    if order.index(w1[j])>order.index(w2[j]):
+                        return False  
+                    break                
+        return True         
+
+------------------------------------------------------------------------
+PROBLEM- 
+
+
+------------------------------------------------------------------------
+PROBLEM- 
+
+
+------------------------------------------------------------------------
+PROBLEM- 
+
+
+------------------------------------------------------------------------
+PROBLEM- 
+
+
+------------------------------------------------------------------------
+PROBLEM- 
+
+
+------------------------------------------------------------------------
+PROBLEM- 
+
+
+------------------------------------------------------------------------
+PROBLEM- 
+
+
+------------------------------------------------------------------------
+PROBLEM- 
+
+
+------------------------------------------------------------------------
+PROBLEM- 
+
+
+------------------------------------------------------------------------
