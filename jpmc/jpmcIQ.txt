@@ -1,0 +1,1144 @@
+
+                                      JPMC
+
+#31
+# A permutation of an array of integers is an arrangement of its members into a sequence or linear order.
+# For example, for arr = [1,2,3], the following are all the permutations of arr: [1,2,3], [1,3,2], [2, 1, 3], [2, 3, 1], [3,1,2], [3,2,1].
+# The next permutation of an array of integers is the next lexicographically greater permutation of its integer. More formally, if all the permutations of the array are sorted in one container according to their lexicographical order, then the next permutation of that array is the permutation that follows it in the sorted container. If such arrangement is not possible, the array must be rearranged as the lowest possible order (i.e., sorted in ascending order).
+# For example, the next permutation of arr = [1,2,3] is [1,3,2].
+# Similarly, the next permutation of arr = [2,3,1] is [3,1,2].
+# While the next permutation of arr = [3,2,1] is [1,2,3] because [3,2,1] does not have a lexicographical larger rearrangement.
+# Given an array of integers nums, find the next permutation of nums.
+# The replacement must be in place and use only constant extra memory.
+
+# Example 1:
+# Input: nums = [1,2,3]
+# Output: [1,3,2]
+
+# Example 2:
+# Input: nums = [3,2,1]
+# Output: [1,2,3]
+
+# Example 3:
+# Input: nums = [1,1,5]
+# Output: [1,5,1]
+
+class Solution:
+    def nextPermutation(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        i = j = len(nums)-1
+        while i>0 and nums[i-1]>=nums[i]:            
+            i -= 1
+
+        #321 -> 123    
+        if i==0:
+            nums.reverse()                 
+            return
+
+        #231 - > 321 -> 312
+        while nums[i-1] >= nums[j]:
+            j -= 1
+        nums[j], nums[i-1] = nums[i-1], nums[j]
+        nums[i:] = nums[len(nums)-1: i-1 : -1]  
+
+
+#231
+# Given an integer n, return true if it is a power of two. Otherwise, return false.
+# An integer n is a power of two, if there exists an integer x such that n == 2x.
+ 
+# Example 1:
+# Input: n = 1
+# Output: true
+# Explanation: 20 = 1
+
+# Example 2:
+# Input: n = 16
+# Output: true
+# Explanation: 24 = 16
+
+# Example 3:
+# Input: n = 3
+# Output: false
+
+class Solution:
+    def isPowerOfTwo(self, n: int) -> bool:       
+        while n:
+            if n==1:
+                return True
+            if n%2:
+                return False
+            n = n//2    
+           
+
+
+#263
+# An ugly number is a positive integer whose prime factors are limited to 2, 3, and 5.
+# Given an integer n, return true if n is an ugly number.
+
+# Example 1:
+# Input: n = 6
+# Output: true
+# Explanation: 6 = 2 × 3
+
+# Example 2:
+# Input: n = 1
+# Output: true
+# Explanation: 1 has no prime factors, therefore all of its prime factors are limited to 2, 3, and 5.
+
+# Example 3:
+# Input: n = 14
+# Output: false
+# Explanation: 14 is not ugly since it includes the prime factor 7.
+
+class Solution:
+    def isUgly(self, n: int) -> bool:
+        while n:
+            if n==1:
+                return True
+            if n%2==0:
+                n = n//2
+            elif n%3==0:
+                n = n//3
+            elif n%5==0:
+                n = n//5
+            else:
+                return False      
+
+#349
+# Given two integer arrays nums1 and nums2, return an array of their intersection. Each element in the result must be unique and you may return the result in any order.
+
+# Example 1:
+# Input: nums1 = [1,2,2,1], nums2 = [2,2]
+# Output: [2]
+
+# Example 2:
+# Input: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+# Output: [9,4]
+# Explanation: [4,9] is also accepted.
+
+class Solution:
+    def intersection(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        n1=set(nums1)
+        n2=set(nums2)
+        l1,l2 = len(n1),len(n2)
+        if l2<l1:
+            l1,l2 = l2,l1
+        res = []
+        for n in n1:
+            if n in n2:
+                res.append(n)   
+        return res         
+        
+        # Alternative answers
+        # return list(n1&n2)
+        # return list(n1.intersection(n2))
+
+
+
+#357          
+# Given an integer n, return the count of all numbers with unique digits, x, where 0 <= x < 10n.
+
+# Example 1:
+# Input: n = 2
+# Output: 91
+# Explanation: The answer should be the total numbers in the range of 0 ≤ x < 100, excluding 11,22,33,44,55,66,77,88,99
+
+# Example 2:
+# Input: n = 0
+# Output: 1
+
+# time: O(1), Space O(1)
+# 1+9+9*9+9*9*8+9*9*8*7+..... + 9*9*8*7*6*5*4*3*2
+# 10 + 9*9[1+8[1+7[1+6+[...(11-n)(1+0)...]]
+# for n>10---> return 0
+class Solution:
+    def countNumbersWithUniqueDigits(self, n: int) -> int:
+        def count(k):
+            if k == max(10-n, 0):
+                return 0
+            return k*(1+count(k-1))
+
+        if n==0:
+            return 1
+        return 10 + 9*count(9)   
+           
+
+#412
+# Given an integer n, return a string array answer (1-indexed) where:
+# answer[i] == "FizzBuzz" if i is divisible by 3 and 5.
+# answer[i] == "Fizz" if i is divisible by 3.
+# answer[i] == "Buzz" if i is divisible by 5.
+# answer[i] == i (as a string) if none of the above conditions are true.
+ 
+# Example 1:
+# Input: n = 3
+# Output: ["1","2","Fizz"]
+
+# Example 2:
+# Input: n = 5
+# Output: ["1","2","Fizz","4","Buzz"]
+
+# Example 3:
+# Input: n = 15
+# Output: ["1","2","Fizz","4","Buzz","Fizz","7","8","Fizz","Buzz","11","Fizz","13","14","FizzBuzz"]
+
+class Solution:
+    def fizzBuzz(self, n: int) -> List[str]:
+        res = [""]* (n)
+        for i in range(1,n+1):
+            if not i%3 and not i%5: res[i-1]="FizzBuzz"
+            elif not i%3: res[i-1]="Fizz"
+            elif not i%5: res[i-1]="Buzz"
+            else: res[i-1]=str(i)
+        return res    
+
+#423
+# Given a string s containing an out-of-order English representation of digits 0-9, return the digits in ascending order.
+
+# Example 1:
+# Input: s = "owoztneoer"
+# Output: "012"
+
+# Example 2:
+# Input: s = "fviefuro"
+# Output: "45"
+ 
+from collections import Counter, OrderedDict
+
+
+class Solution:
+    def originalDigits(self, s: str) -> str:
+      countS = Counter(s)
+      check = OrderedDict()
+      check["z"] = ["0","zero"]
+      check["w"] = ["2","two"]
+      check["u"] = ["4","four"]
+      check["x"] = ["6","six"]
+      check["g"] = ["8","eight"]
+      check["o"] = ["1","one"]
+      check["t"] = ["3","three"]
+      check["f"] = ["5","five"]
+      check["s"] = ["7","seven"]
+      check["i"] = ["9","nine"]
+
+      output = []
+      while sum(countS.values()) != 0:
+        for key in check.keys():
+          if key in countS and countS[key] != 0:
+            val = countS[key]
+            for c in check[key][1]:
+              countS[c] -= val
+            output.extend([check[key][0] for i in range(val)])
+          else:
+            continue
+      output.sort()
+      return "".join(output)      
+
+
+#509
+# The Fibonacci numbers, commonly denoted F(n) form a sequence, called the Fibonacci sequence, such that each number is the sum of the two preceding ones, starting from 0 and 1. That is,
+# F(0) = 0, F(1) = 1
+# F(n) = F(n - 1) + F(n - 2), for n > 1.
+# Given n, calculate F(n).
+
+# Example 1:
+# Input: n = 2
+# Output: 1
+# Explanation: F(2) = F(1) + F(0) = 1 + 0 = 1.
+
+# Example 2:
+# Input: n = 3
+# Output: 2
+# Explanation: F(3) = F(2) + F(1) = 1 + 1 = 2.
+
+# Example 3:
+# Input: n = 4
+# Output: 3
+# Explanation: F(4) = F(3) + F(2) = 2 + 1 = 3.
+
+# Time : O(n), Space : O(1)
+class Solution:
+    def fib(self, n: int) -> int:       
+      if n<2:
+        return n
+
+      n0, n1 = 0, 1
+      for i in range(2, n+1):
+        cur = n0+n1
+        n0=n1
+        n1=cur
+      return n1      
+
+
+
+#560
+# Given an array of integers nums and an integer k, return the total number of subarrays whose sum equals to k.
+# A subarray is a contiguous non-empty sequence of elements within an array.
+
+# Example 1:
+# Input: nums = [1,1,1], k = 2
+# Output: 2
+
+# Example 2:
+# Input: nums = [1,2,3], k = 3
+# Output: 2
+
+class Solution:
+    def subarraySum(self, nums: List[int], k: int) -> int:
+        mapp = {0:1}
+        total = 0
+        res = 0
+
+        for n in nums:
+            total += n                            # sum(nums[i:j]) = k    
+            if total - k in mapp:                 # sum(nums[:j])-sum[nums[:i]] = k
+                res += mapp[total-k]              # total-k = sum(nums[:i])
+
+            mapp[total] = 1 + mapp.get(total, 0)
+        return res            
+
+
+#780
+# Given four integers sx, sy, tx, and ty, return true if it is possible to convert the point (sx, sy) to the point (tx, ty) through some operations, or false otherwise.
+# The allowed operation on some point (x, y) is to convert it to either (x, x + y) or (x + y, y).
+
+# Example 1:
+# Input: sx = 1, sy = 1, tx = 3, ty = 5
+# Output: true
+# Explanation:
+# One series of moves that transforms the starting point to the target is:
+# (1, 1) -> (1, 2)
+# (1, 2) -> (3, 2)
+# (3, 2) -> (3, 5)
+
+# Example 2:
+# Input: sx = 1, sy = 1, tx = 2, ty = 2
+# Output: false
+
+# Example 3:
+# Input: sx = 1, sy = 1, tx = 1, ty = 1
+# Output: true
+ 
+
+# Time: O(n) , n= max(tx,ty)
+# Space : O(1)
+class Solution:
+    def reachingPoints(self, sx: int, sy: int, tx: int, ty: int) -> bool:
+      while tx>=ty+sx or ty>=tx+sy:
+        if tx>ty:
+          tx = sx + (tx-sx) % ty
+        else:  
+          ty = sy + (ty-sy) % tx
+      return tx==sx and ty==sy    
+        
+
+
+#884
+# A sentence is a string of single-space separated words where each word consists only of lowercase letters.
+# A word is uncommon if it appears exactly once in one of the sentences, and does not appear in the other sentence.
+# Given two sentences s1 and s2, return a list of all the uncommon words. You may return the answer in any order.
+
+# Example 1:
+# Input: s1 = "this apple is sweet", s2 = "this apple is sour"
+# Output: ["sweet","sour"]
+
+# Example 2:
+# Input: s1 = "apple apple", s2 = "banana"
+# Output: ["banana"]
+
+class Solution:
+    def uncommonFromSentences(self, s1: str, s2: str) -> List[str]:
+        l1 = s1.split(" ")
+        l2 = s2.split(" ")
+
+        mapp = {}
+        for w in l1:
+            mapp[w] = 1+mapp.get(w,0)
+        for w in l2:
+            mapp[w] = 1+mapp.get(w,0)
+
+        res = []          
+        for w in mapp.keys():
+            if mapp[w]==1:
+                res.append(w)    
+        return res
+
+
+#1010
+# You are given a list of songs where the ith song has a duration of time[i] seconds.
+# Return the number of pairs of songs for which their total duration in seconds is divisible by 60. Formally, we want the number of indices i, j such that i < j with (time[i] + time[j]) % 60 == 0.
+
+# Example 1:
+# Input: time = [30,20,150,100,40]
+# Output: 3
+# Explanation: Three pairs have a total duration divisible by 60:
+# (time[0] = 30, time[2] = 150): total duration 180
+# (time[1] = 20, time[3] = 100): total duration 120
+# (time[1] = 20, time[4] = 40): total duration 60
+
+# Example 2:
+# Input: time = [60,60,60]
+# Output: 3
+# Explanation: All three pairs have a total duration of 120, which is divisible by 60.
+ 
+class Solution:
+    def numPairsDivisibleBy60(self, time: List[int]) -> int:
+        mapping = {}
+        pairs = 0
+
+        for t in time:
+            numMod = t%60
+
+            if numMod==0:
+                if 0 in mapping:
+                    pairs += mapping[0]
+            else:
+                if (60-numMod) in mapping:
+                    pairs += mapping[60-numMod] 
+
+
+#1012
+# Given an integer n, return the number of positive integers in the range [1, n] that have at least one repeated digit.
+
+# Example 1:
+# Input: n = 20
+# Output: 1
+# Explanation: The only positive number (<= 20) with at least 1 repeated digit is 11.
+
+# Example 2:
+# Input: n = 100
+# Output: 10
+# Explanation: The positive numbers (<= 100) with atleast 1 repeated digit are 11, 22, 33, 44, 55, 66, 77, 88, 99, and 100.
+
+# Example 3:
+# Input: n = 1000
+# Output: 262
+
+# Intuition
+# Count res the Number Without Repeated Digit
+# Then the number with repeated digits = N - res
+# Similar as 788. Rotated Digits
+# Numbers At Most N Given Digit Set
+# Explanation:
+# Transform N + 1 to arrayList
+# Count the number with digits < n
+# Count the number with same prefix
+# For example,
+# if N = 8765, L = [8,7,6,6],
+# the number without repeated digit can the the following format:
+# XXX
+# XX
+# X
+# 1XXX ~ 7XXX
+# 80XX ~ 86XX
+# 870X ~ 875X
+# 8760 ~ 8765
+
+# Time Complexity:
+# the number of permutations A(m,n) is O(1)
+# We count digit by digit, so it's O(logN)
+
+class Solution:
+    def numDupDigitsAtMostN(self, n: int) -> int:
+      digits = list(map(int, str(n+1)))
+      nl = len(digits)
+
+      res = sum(9*perm(9,i) for i in range(nl-1))
+
+      s = set()
+      for i,x in enumerate(digits):
+        for y in range(i==0, x):
+          if y not in s:
+            res += perm(9-i,nl-1-i)
+        if x in s:
+          break  
+        s.add(x)
+      return n-res
+        
+
+#1023
+# Given an array of strings queries and a string pattern, return a boolean array answer where answer[i] is true if queries[i] matches pattern, and false otherwise.
+# A query word queries[i] matches pattern if you can insert lowercase English letters pattern so that it equals the query. You may insert each character at any position and you may not insert any characters.
+
+# Example 1:
+# Input: queries = ["FooBar","FooBarTest","FootBall","FrameBuffer","ForceFeedBack"], pattern = "FB"
+# Output: [true,false,true,true,false]
+# Explanation: "FooBar" can be generated like this "F" + "oo" + "B" + "ar".
+# "FootBall" can be generated like this "F" + "oot" + "B" + "all".
+# "FrameBuffer" can be generated like this "F" + "rame" + "B" + "uffer".
+
+# Example 2:
+# Input: queries = ["FooBar","FooBarTest","FootBall","FrameBuffer","ForceFeedBack"], pattern = "FoBa"
+# Output: [true,false,true,false,false]
+# Explanation: "FooBar" can be generated like this "Fo" + "o" + "Ba" + "r".
+# "FootBall" can be generated like this "Fo" + "ot" + "Ba" + "ll".
+
+# Example 3:
+# Input: queries = ["FooBar","FooBarTest","FootBall","FrameBuffer","ForceFeedBack"], pattern = "FoBaT"
+# Output: [false,true,false,false,false]
+# Explanation: "FooBarTest" can be generated like this "Fo" + "o" + "Ba" + "r" + "T" + "est".
+
+# Time : O(n*m), n= len(p), m = max([len(i) for i in p]),
+# Space : O(1) 
+class Solution:
+    def camelMatch(self, queries: List[str], pattern: str) -> List[bool]:
+        
+        def match(p, q):
+            i = 0
+            for j, s in enumerate(q):
+                if i < len(p) and p[i]==q[j]:
+                    i += 1
+                elif q[j].isupper():
+                    return False    
+            return i==len(p)
+
+        return [True if match(pattern, s) else False for s in queries]
+
+        
+#1167
+# You have some number of sticks with positive integer lengths. These lengths are given as an array sticks, where sticks[i] is the length of the ith stick.
+
+# You can connect any two sticks of lengths x and y into one stick by paying a cost of x + y. You must connect all the sticks until there is only one stick remaining.
+
+# Return the minimum cost of connecting all the given sticks into one stick in this way.
+
+ 
+
+# Example 1:
+
+# Input: sticks = [2,4,3]
+# Output: 14
+# Explanation: You start with sticks = [2,4,3].
+# 1. Combine sticks 2 and 3 for a cost of 2 + 3 = 5. Now you have sticks = [5,4].
+# 2. Combine sticks 5 and 4 for a cost of 5 + 4 = 9. Now you have sticks = [9].
+# There is only one stick left, so you are done. The total cost is 5 + 9 = 14.
+# Example 2:
+
+# Input: sticks = [1,8,3,5]
+# Output: 30
+# Explanation: You start with sticks = [1,8,3,5].
+# 1. Combine sticks 1 and 3 for a cost of 1 + 3 = 4. Now you have sticks = [4,8,5].
+# 2. Combine sticks 4 and 5 for a cost of 4 + 5 = 9. Now you have sticks = [9,8].
+# 3. Combine sticks 9 and 8 for a cost of 9 + 8 = 17. Now you have sticks = [17].
+# There is only one stick left, so you are done. The total cost is 4 + 9 + 17 = 30.
+# Example 3:
+
+# Input: sticks = [5]
+# Output: 0
+# Explanation: There is only one stick, so you don't need to do anything. The total cost is 0.
+
+class Solution:
+    def connectSticks(self, sticks: List[int]) -> int:
+        if len(sticks)==1:
+            return 0
+
+        res = 0
+        heapq.heapify(sticks)
+
+        while sticks and len(sticks)>1:
+            first, second = heapq.heappop(sticks), heapq.heappop(sticks)
+            res += first+second
+            heapq.heappush(sticks, first+second)
+
+        return res
+
+
+#1200
+# Given an array of distinct integers arr, find all pairs of elements with the minimum absolute difference of any two elements.
+# Return a list of pairs in ascending order(with respect to pairs), each pair [a, b] follows
+# a, b are from arr
+# a < b
+# b - a equals to the minimum absolute difference of any two elements in arr
+
+# Example 1:
+# Input: arr = [4,2,1,3]
+# Output: [[1,2],[2,3],[3,4]]
+# Explanation: The minimum absolute difference is 1. List all pairs with difference equal to 1 in ascending order.
+
+# Example 2:
+# Input: arr = [1,3,6,10,15]
+# Output: [[1,3]]
+
+# Example 3:
+# Input: arr = [3,8,-10,23,19,-4,-14,27]
+# Output: [[-14,-10],[19,23],[23,27]]
+
+# Time: O(nlogn), Space: O(1)
+class Solution:
+    def minimumAbsDifference(self, arr: List[int]) -> List[List[int]]:
+        res = []
+        arr.sort()
+        mindiff = float("inf")
+
+        for i in range(len(arr)-1):
+            if arr[i+1]-arr[i]<mindiff:
+                res = []
+                mindiff = arr[i+1]-arr[i]
+                res.append([arr[i], arr[i+1]])
+            elif arr[i+1]-arr[i]==mindiff:  
+                res.append([arr[i], arr[i+1]])
+        return res        
+
+
+#1328
+# Given a palindromic string of lowercase English letters palindrome, replace exactly one character with any lowercase English letter so that the resulting string is not a palindrome and that it is the lexicographically smallest one possible.
+# Return the resulting string. If there is no way to replace a character to make it not a palindrome, return an empty string.
+# A string a is lexicographically smaller than a string b (of the same length) if in the first position where a and b differ, a has a character strictly smaller than the corresponding character in b. For example, "abcc" is lexicographically smaller than "abcd" because the first position they differ is at the fourth character, and 'c' is smaller than 'd'.
+
+# Example 1:
+# Input: palindrome = "abccba"
+# Output: "aaccba"
+# Explanation: There are many ways to make "abccba" not a palindrome, such as "zbccba", "aaccba", and "abacba".
+# Of all the ways, "aaccba" is the lexicographically smallest.
+
+# Example 2:
+# Input: palindrome = "a"
+# Output: ""
+# Explanation: There is no way to replace a single character to make "a" not a palindrome, so return an empty string.
+
+class Solution:
+    def breakPalindrome(self, palindrome: str) -> str:
+      n = len(palindrome)
+      if n<=1:
+        return ""
+     
+      output = ""
+      flag = False
+      i,j = 0, n-1
+      while i<j:
+        if palindrome[i] != "a":     
+          output = palindrome[:i]+"a"+palindrome[i+1:]  
+          flag = True
+          break
+        i+=1
+        j-=1
+
+      if flag == False:
+        output = palindrome[:-1]+"b"    
+      return output  
+
+
+
+#1353
+# You are given an array of events where events[i] = [startDayi, endDayi]. Every event i starts at startDayi and ends at endDayi.
+# You can attend an event i at any day d where startTimei <= d <= endTimei. You can only attend one event at any time d.
+# Return the maximum number of events you can attend.
+
+# Example 1:
+# Input: events = [[1,2],[2,3],[3,4]]
+# Output: 3
+# Explanation: You can attend all the three events.
+# One way to attend them all is as shown.
+# Attend the first event on day 1.
+# Attend the second event on day 2.
+# Attend the third event on day 3.
+
+# Example 2:
+# Input: events= [[1,2],[2,3],[3,4],[1,2]]
+# Output: 4
+
+# Worst-case Time Complexity: O(nlogn)
+# Worst-case Space Complexity: O(n)
+
+class Solution:
+    def maxEvents(self, events: List[List[int]]) -> int:
+        n = len(events)
+        events.sort()
+
+        started = []
+        count = 0
+        i = 0
+        curr_day = events[0][0]
+
+        while i<n:
+            while i<n and events[i][0]==curr_day:
+                heapq.heappush(started, events[i][1])
+                i += 1
+
+            heapq.heappop(started)
+            count += 1
+            curr_day += 1
+
+            while started and started[0]<curr_day:
+                heapq.heappop(started)
+
+            if i<n and not started:
+                curr_day = events[i][0]   
+ 
+
+        while started:
+            if heapq.heappop(started)>=curr_day:
+                curr_day += 1
+                count += 1
+
+        return count                    
+                    
+
+
+#1356
+# You are given an integer array arr. Sort the integers in the array in ascending order by the number of 1's in their binary representation and in case of two or more integers have the same number of 1's you have to sort them in ascending order.
+# Return the array after sorting it.
+
+# Example 1:
+# Input: arr = [0,1,2,3,4,5,6,7,8]
+# Output: [0,1,2,4,8,3,5,6,7]
+# Explantion: [0] is the only integer with 0 bits.
+# [1,2,4,8] all have 1 bit.
+# [3,5,6] have 2 bits.
+# [7] has 3 bits.
+# The sorted array by bits is [0,1,2,4,8,3,5,6,7]
+
+# Example 2:
+# Input: arr = [1024,512,256,128,64,32,16,8,4,2,1]
+# Output: [1,2,4,8,16,32,64,128,256,512,1024]
+# Explantion: All integers have 1 bit in the binary representation, you should just sort them in ascending order.
+
+# Time complexity: O(nlogn)
+# Space complexity:O(n) or O(logn)
+class Solution:
+    def sortByBits(self, arr: List[int]) -> List[int]:    
+      def countBit(n):
+        count = 0
+        while n:
+          count += n&1
+          n = n>>1  
+        return count
+
+      # def countBit(n):
+      #   return bin(n).count("1")  
+      
+      arr.sort(key = lambda num :(countBit(num), num))
+      return arr
+
+#1413
+# Given an array of integers nums, you start with an initial positive value startValue.
+# In each iteration, you calculate the step by step sum of startValue plus elements in nums (from left to right).
+# Return the minimum positive value of startValue such that the step by step sum is never less than 1.
+ 
+# Example 1:
+# Input: nums = [-3,2,-3,4,2]
+# Output: 5
+# Explanation: If you choose startValue = 4, in the third iteration your step by step sum is less than 1.
+# step by step sum
+# startValue = 4 | startValue = 5 | nums
+#   (4 -3 ) = 1  | (5 -3 ) = 2    |  -3
+#   (1 +2 ) = 3  | (2 +2 ) = 4    |   2
+#   (3 -3 ) = 0  | (4 -3 ) = 1    |  -3
+#   (0 +4 ) = 4  | (1 +4 ) = 5    |   4
+#   (4 +2 ) = 6  | (5 +2 ) = 7    |   2
+
+# Example 2:
+# Input: nums = [1,2]
+# Output: 1
+# Explanation: Minimum start value should be positive. 
+
+# Example 3:
+# Input: nums = [1,-2,-3]
+# Output: 5
+
+# Time : O(n), Space : O(1)
+class Solution:
+    def minStartValue(self, nums: List[int]) -> int:
+        for i in range(1, len(nums)):
+            nums[i] += nums[i-1]
+
+        minV = min(nums)
+        if minV >0:
+            return 1
+        else:
+            return -1*minV +1     
+
+#1418
+# Given the array orders, which represents the orders that customers have done in a restaurant. More specifically orders[i]=[customerNamei,tableNumberi,foodItemi] where customerNamei is the name of the customer, tableNumberi is the table customer sit at, and foodItemi is the item customer orders.
+# Return the restaurant's “display table”. The “display table” is a table whose row entries denote how many of each food item each table ordered. The first column is the table number and the remaining columns correspond to each food item in alphabetical order. The first row should be a header whose first column is “Table”, followed by the names of the food items. Note that the customer names are not part of the table. Additionally, the rows should be sorted in numerically increasing order.
+
+# Example 1:
+# Input: orders = [["David","3","Ceviche"],["Corina","10","Beef Burrito"],["David","3","Fried Chicken"],["Carla","5","Water"],["Carla","5","Ceviche"],["Rous","3","Ceviche"]]
+# Output: [["Table","Beef Burrito","Ceviche","Fried Chicken","Water"],["3","0","2","1","0"],["5","0","1","0","1"],["10","1","0","0","0"]] 
+# Explanation:
+# The displaying table looks like:
+# Table,Beef Burrito,Ceviche,Fried Chicken,Water
+# 3    ,0           ,2      ,1            ,0
+# 5    ,0           ,1      ,0            ,1
+# 10   ,1           ,0      ,0            ,0
+# For the table 3: David orders "Ceviche" and "Fried Chicken", and Rous orders "Ceviche".
+# For the table 5: Carla orders "Water" and "Ceviche".
+# For the table 10: Corina orders "Beef Burrito". 
+
+# Example 2:
+# Input: orders = [["James","12","Fried Chicken"],["Ratesh","12","Fried Chicken"],["Amadeus","12","Fried Chicken"],["Adam","1","Canadian Waffles"],["Brianna","1","Canadian Waffles"]]
+# Output: [["Table","Canadian Waffles","Fried Chicken"],["1","2","0"],["12","0","3"]] 
+# Explanation: 
+# For the table 1: Adam and Brianna order "Canadian Waffles".
+# For the table 12: James, Ratesh and Amadeus order "Fried Chicken".
+
+# Example 3:
+# Input: orders = [["Laura","2","Bean Burrito"],["Jhon","2","Beef Burrito"],["Melissa","2","Soda"]]
+# Output: [["Table","Bean Burrito","Beef Burrito","Soda"],["2","1","1","1"]]
+
+class Solution:
+    def displayTable(self, orders: List[List[str]]) -> List[List[str]]:
+        mapp = collections.defaultdict(list)
+        food = set()
+        for n,num,f in orders:
+            mapp[str(num)].append(f)
+            food.add(f)
+
+        ROW = 1+ len(mapp.keys())
+        COL = 1+ len(food)
+
+        Table = [[""]*COL for i in range(ROW)]
+
+        Table[0][0] = "Table"
+        food = sorted(list(food))
+
+        for f in range(1, COL):
+            Table[0][f] = food[f-1]
+
+        mapkeys = [int(k) for k in mapp.keys()] 
+        mapkeys.sort()
+            
+        for n, k in zip(range(1, ROW), mapkeys):
+            Table[n][0] = str(k)
+
+        for i in range(1,ROW):
+            for j in range(1, COL):
+                Table[i][j] = str(mapp[Table[i][0]].count(Table[0][j]))
+
+        return Table            
+
+
+#1481
+# Given an array of integers arr and an integer k. Find the least number of unique integers after removing exactly k elements.
+
+# Example 1:
+# Input: arr = [5,5,4], k = 1
+# Output: 1
+# Explanation: Remove the single 4, only 5 is left.
+
+# Example 2:
+# Input: arr = [4,3,1,1,3,3,2], k = 3
+# Output: 2
+# Explanation: Remove 4, 2 and either one of the two 1s or three 3s. 1 and 3 will be left.
+ 
+
+class Solution:
+    def findLeastNumOfUniqueInts(self, arr: List[int], k: int) -> int:
+      n = len(arr)
+      count = Counter(arr)
+      res = 0
+      
+      freq = [[] for i in range(n+1)]
+      for key, v in count.items():
+        freq[v].append(key)
+
+      for i,v in enumerate(freq):
+        if len(v)>0:
+          for val in v:
+            if count[val]>k:
+              break
+            else:
+              k -= count[val]
+              count.pop(val)
+              if k==0:
+                break
+      return len(count.keys())
+
+
+#1529
+# You are given a 0-indexed binary string target of length n. You have another binary string s of length n that is initially set to all zeros. You want to make s equal to target.
+# In one operation, you can pick an index i where 0 <= i < n and flip all bits in the inclusive range [i, n - 1]. Flip means changing '0' to '1' and '1' to '0'.
+# Return the minimum number of operations needed to make s equal to target.
+
+# Example 1:
+# Input: target = "10111"
+# Output: 3
+# Explanation: Initially, s = "00000".
+# Choose index i = 2: "00000" -> "00111"
+# Choose index i = 0: "00111" -> "11000"
+# Choose index i = 1: "11000" -> "10111"
+# We need at least 3 flip operations to form target.
+
+# Example 2:
+# Input: target = "101"
+# Output: 3
+# Explanation: Initially, s = "000".
+# Choose index i = 0: "000" -> "111"
+# Choose index i = 1: "111" -> "100"
+# Choose index i = 2: "100" -> "101"
+# We need at least 3 flip operations to form target.
+
+# Example 3:
+# Input: target = "00000"
+# Output: 0
+# Explanation: We do not need any operations since the initial s already equals target.
+
+class Solution:
+    def minFlips(self, target: str) -> int:
+      prev = "0"
+      res  = 0
+
+      for c in target:
+        if c != prev:
+          res += 1
+        prev = c
+      return res  
+
+
+#1541
+# Given a parentheses string s containing only the characters '(' and ')'. A parentheses string is balanced if:
+# Any left parenthesis '(' must have a corresponding two consecutive right parenthesis '))'.
+# Left parenthesis '(' must go before the corresponding two consecutive right parenthesis '))'.
+# In other words, we treat '(' as an opening parenthesis and '))' as a closing parenthesis.
+# For example, "())", "())(())))" and "(())())))" are balanced, ")()", "()))" and "(()))" are not balanced.
+# You can insert the characters '(' and ')' at any position of the string to balance it if needed.
+# Return the minimum number of insertions needed to make s balanced.
+
+# Example 1:
+# Input: s = "(()))"
+# Output: 1
+# Explanation: The second '(' has two matching '))', but the first '(' has only ')' matching. We need to add one more ')' at the end of the string to be "(())))" which is balanced.
+
+# Example 2:
+# Input: s = "())"
+# Output: 0
+# Explanation: The string is already balanced.
+
+# Example 3:
+# Input: s = "))())("
+# Output: 3
+# Explanation: Add '(' to match the first '))', Add '))' to match the last '('.
+
+# Time: O(n), Space : O(1)
+class Solution:
+    def minInsertions(self, s: str) -> int:
+        s = s.replace('))','}')
+        miss_br = 0
+        req_cl = 0
+
+        for c in s:
+            if c=='(':
+                req_cl += 2
+            else:
+                if c==')':
+                    miss_br += 1
+                if req_cl:
+                    req_cl -= 2
+                else:
+                    miss_br += 1
+        return miss_br + req_cl       
+
+#1710
+# You are assigned to put some amount of boxes onto one truck. You are given a 2D array boxTypes, where boxTypes[i] = [numberOfBoxesi, numberOfUnitsPerBoxi]:
+# numberOfBoxesi is the number of boxes of type i.
+# numberOfUnitsPerBoxi is the number of units in each box of the type i.
+# You are also given an integer truckSize, which is the maximum number of boxes that can be put on the truck. You can choose any boxes to put on the truck as long as the number of boxes does not exceed truckSize.
+# Return the maximum total number of units that can be put on the truck.
+
+# Example 1:
+# Input: boxTypes = [[1,3],[2,2],[3,1]], truckSize = 4
+# Output: 8
+# Explanation: There are:
+# - 1 box of the first type that contains 3 units.
+# - 2 boxes of the second type that contain 2 units each.
+# - 3 boxes of the third type that contain 1 unit each.
+# You can take all the boxes of the first and second types, and one box of the third type.
+# The total number of units will be = (1 * 3) + (2 * 2) + (1 * 1) = 8.
+
+# Example 2:
+# Input: boxTypes = [[5,10],[2,5],[4,7],[3,9]], truckSize = 10
+# Output: 91
+ 
+class Solution:
+    def maximumUnits(self, boxTypes: List[List[int]], truckSize: int) -> int:
+      boxTypes.sort(key=lambda x: x[1], reverse=True)
+      boxUsed = 0
+      units = 0
+
+      for box in boxTypes:
+        if boxUsed==truckSize: 
+          return units
+        if boxUsed+box[0] <= truckSize:
+          units += box[0]*box[1] 
+          boxUsed += box[0]
+        elif boxUsed+box[0] > truckSize:
+          units += (truckSize-boxUsed)*box[1]
+          boxUsed += (truckSize-boxUsed)    
+      return units
+
+
+#1812
+# You are given coordinates, a string that represents the coordinates of a square of the chessboard. Below is a chessboard for your reference.
+# Return true if the square is white, and false if the square is black.
+# The coordinate will always represent a valid chessboard square. The coordinate will always have the letter first, and the number second.
+
+# Example 1:
+# Input: coordinates = "a1"
+# Output: false
+# Explanation: From the chessboard above, the square with coordinates "a1" is black, so return false.
+
+# Example 2:
+# Input: coordinates = "h3"
+# Output: true
+# Explanation: From the chessboard above, the square with coordinates "h3" is white, so return true.
+
+# Example 3:
+# Input: coordinates = "c7"
+# Output: false
+ 
+class Solution:
+    def squareIsWhite(self, coordinates: str) -> bool:
+        mapp = {"a":1, "b":2, "c":3, "d":4, "e":5, "f":6,"g":7, "h":8}
+        corlist = list(coordinates)
+        total = int(mapp[corlist[0]])+int(corlist[1])
+        if total%2:
+            return True
+        else:
+            return False    
+
+
+
+#2038
+# There are n pieces arranged in a line, and each piece is colored either by 'A' or by 'B'. You are given a string colors of length n where colors[i] is the color of the ith piece.
+# Alice and Bob are playing a game where they take alternating turns removing pieces from the line. In this game, Alice moves first.
+# Alice is only allowed to remove a piece colored 'A' if both its neighbors are also colored 'A'. She is not allowed to remove pieces that are colored 'B'.
+# Bob is only allowed to remove a piece colored 'B' if both its neighbors are also colored 'B'. He is not allowed to remove pieces that are colored 'A'.
+# Alice and Bob cannot remove pieces from the edge of the line.
+# If a player cannot make a move on their turn, that player loses and the other player wins.
+# Assuming Alice and Bob play optimally, return true if Alice wins, or return false if Bob wins.
+
+# Example 1:
+# Input: colors = "AAABABB"
+# Output: true
+# Explanation:
+# AAABABB -> AABABB
+# Alice moves first.
+# She removes the second 'A' from the left since that is the only 'A' whose neighbors are both 'A'.
+# Now it's Bob's turn.
+# Bob cannot make a move on his turn since there are no 'B's whose neighbors are both 'B'.
+# Thus, Alice wins, so return true.
+
+# Example 2:
+# Input: colors = "AA"
+# Output: false
+# Explanation:
+# Alice has her turn first.
+# There are only two 'A's and both are on the edge of the line, so she cannot move on her turn.
+# Thus, Bob wins, so return false.
+
+# Example 3:
+# Input: colors = "ABBBBBBBAAA"
+# Output: false
+# Explanation:
+# ABBBBBBBAAA -> ABBBBBBBAA
+# Alice moves first.
+# Her only option is to remove the second to last 'A' from the right.
+# ABBBBBBBAA -> ABBBBBBAA
+# Next is Bob's turn.
+# He has many options for which 'B' piece to remove. He can pick any.
+# On Alice's second turn, she has no more pieces that she can remove.
+# Thus, Bob wins, so return false.
+
+# Time : O(n), Space : O(1)
+class Solution:
+    def winnerOfGame(self, colors: str) -> bool:
+      Alice, Bob = 0, 0 
+
+      for i in range(1,len(colors)-1):
+        prev, cur, nxt = colors[i-1], colors[i], colors[i+1]
+
+        if prev=="A" and cur=="A" and nxt=="A":
+          Alice +=1
+        elif prev=="B" and cur=="B" and nxt=="B":
+          Bob +=1
+        else:
+          continue
+      return Alice>Bob   
+
+
+
+#2068
+# Two strings word1 and word2 are considered almost equivalent if the differences between the frequencies of each letter from 'a' to 'z' between word1 and word2 is at most 3.
+# Given two strings word1 and word2, each of length n, return true if word1 and word2 are almost equivalent, or false otherwise.
+# The frequency of a letter x is the number of times it occurs in the string.
+
+# Example 1:
+# Input: word1 = "aaaa", word2 = "bccb"
+# Output: false
+# Explanation: There are 4 'a's in "aaaa" but 0 'a's in "bccb".
+# The difference is 4, which is more than the allowed 3.
+
+# Example 2:
+# Input: word1 = "abcdeef", word2 = "abaaacc"
+# Output: true
+# Explanation: The differences between the frequencies of each letter in word1 and word2 are at most 3:
+# - 'a' appears 1 time in word1 and 4 times in word2. The difference is 3.
+# - 'b' appears 1 time in word1 and 1 time in word2. The difference is 0.
+# - 'c' appears 1 time in word1 and 2 times in word2. The difference is 1.
+# - 'd' appears 1 time in word1 and 0 times in word2. The difference is 1.
+# - 'e' appears 2 times in word1 and 0 times in word2. The difference is 2.
+# - 'f' appears 1 time in word1 and 0 times in word2. The difference is 1.
+
+class Solution:
+    def checkAlmostEquivalent(self, word1: str, word2: str) -> bool:
+      count1, count2 = {}, {}
+      n = len(word1)
+      for i in range(n):
+        count1[word1[i]] = 1+count1.get(word1[i],0)
+        count2[word2[i]] = 1+count2.get(word2[i],0)
+
+      s = []
+      s.extend(list(count1.keys()))
+      s.extend(list(count2.keys()))
+      s = set(s)
+      for c in s:
+        if abs(count1.get(c,0)-count2.get(c,0))>3:
+          return False
+      return True     
+        
+
+#2273
+# You are given a 0-indexed string array words, where words[i] consists of lowercase English letters.
+# In one operation, select any index i such that 0 < i < words.length and words[i - 1] and words[i] are anagrams, and delete words[i] from words. Keep performing this operation as long as you can select an index that satisfies the conditions.
+# Return words after performing all operations. It can be shown that selecting the indices for each operation in any arbitrary order will lead to the same result.
+# An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase using all the original letters exactly once. For example, "dacb" is an anagram of "abdc".
+ 
+# Example 1:
+# Input: words = ["abba","baba","bbaa","cd","cd"]
+# Output: ["abba","cd"]
+# Explanation:
+# One of the ways we can obtain the resultant array is by using the following operations:
+# - Since words[2] = "bbaa" and words[1] = "baba" are anagrams, we choose index 2 and delete words[2].
+#   Now words = ["abba","baba","cd","cd"].
+# - Since words[1] = "baba" and words[0] = "abba" are anagrams, we choose index 1 and delete words[1].
+#   Now words = ["abba","cd","cd"].
+# - Since words[2] = "cd" and words[1] = "cd" are anagrams, we choose index 2 and delete words[2].
+#   Now words = ["abba","cd"].
+# We can no longer perform any operations, so ["abba","cd"] is the final answer.
+
+# Example 2:
+# Input: words = ["a","b","c","d","e"]
+# Output: ["a","b","c","d","e"]
+# Explanation:
+# No two adjacent strings in words are anagrams of each other, so no operations are performed.
+
+# Time: O(n), Space : O(n)
+class Solution:
+    def removeAnagrams(self, words: List[str]) -> List[str]:
+        def match(p,q):
+            if len(p) != len(q):
+                return False
+            count1 = Counter(p)
+            count2 = Counter(q)
+            for n in count1:
+                if count1[n]!=count2.get(n,0):
+                    return False
+            return True        
+
+        res = [words[0]]
+        for i in range(1, len(words)):
+            if not match(words[i-1], words[i]):
+                res.append(words[i])
+        return res 
