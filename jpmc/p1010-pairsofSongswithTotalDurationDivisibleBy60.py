@@ -28,3 +28,12 @@ class Solution:
             else:
                 if (60-numMod) in mapping:
                     pairs += mapping[60-numMod] 
+
+            if numMod in mapping:
+                mapping[numMod] += 1
+            else:
+                mapping[numMod] = 1
+
+        return pairs        
+
+                
