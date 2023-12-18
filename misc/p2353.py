@@ -33,6 +33,18 @@
 #                                       // However, "ramen" is lexicographically smaller than "sushi".
  
 
+# Complexity
+# Init:
+# Time Complexity: O(N∗log(N)) where N is the number of foods. The primary operation contributing to this time complexity is the insertion of elements into the SortedList, which has a logarithmic time complexity.
+# Space Complexity: O(N) for storing food_info and sorted_cuisine.
+
+# changeRating:
+# Time Complexity: O(log(N)) where N is the number of foods in the specific cuisine. This is the time complexity of removing and adding elements to the SortedList.
+# Space Complexity: O(1).
+
+# highestRated:
+# Time Complexity: O(1). Accessing the first element of the SortedList takes constant time.
+# Space Complexity: O(1).
 
 from sortedcontainers import SortedList
 class FoodRatings:
