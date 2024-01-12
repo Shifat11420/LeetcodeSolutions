@@ -37,7 +37,6 @@ class Solution:
             maxval = max(node.val, left[1], right[1])
 
             m[0] = max(m[0], abs(node.val-minval), abs(node.val-maxval))
-            print(node.val, minval, maxval)
             return minval, maxval     
 
         dfs(root, m)
