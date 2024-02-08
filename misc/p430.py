@@ -19,7 +19,6 @@
 # Output: []
 # Explanation: There could be empty list in the input.
 
-"""
 # Definition for a Node.
 class Node:
     def __init__(self, val, prev, next, child):
@@ -27,7 +26,6 @@ class Node:
         self.prev = prev
         self.next = next
         self.child = child
-"""
 
 # Time: O(n), Space: O(1)
 class Solution:
